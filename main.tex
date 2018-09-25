@@ -1,0 +1,290 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Masters/Doctoral Thesis 
+% LaTeX Template
+% Version 2.3 (25/3/16)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Version 2.x major modifications by:
+% Vel (vel@latextemplates.com)
+%
+% This template is based on a template by:
+% Steve Gunn (http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/)
+% Sunil Patel (http://www.sunilpatel.co.uk/thesis-template/)
+%
+% Template license:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Note: To include the bibliography -> run pdflatex main.tex > bibtex main.aux > pdflatex main.tex > pdflatex main.tex
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+  12pt, % The default document font size, options: 10pt, 11pt, 12pt
+  twoside, % Two side (alternating margins) for binding by default, uncomment to switch to one side
+  %chapterinoneline,% Have the chapter title next to the number in one single line
+  english, % ngerman for German
+  onehalfspacing, % Single line spacing, alternatives: singlespacing, onehalfspacing or doublespacing
+  %draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
+  %nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
+  %liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
+  %toctotoc, % Uncomment to add the main table of contents to the table of contents
+  %parskip, % Uncomment to add space between paragraphs
+  %nohyperref, % Uncomment to not load the hyperref package
+  %headsepline, % Uncomment to get a line under the header
+]{setting} % The class file specifying the document structure
+
+\usepackage{verbatim}
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{palatino} % Use the Palatino font by default
+\usepackage[backend=bibtex,style=numeric-comp,sorting=none,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
+\addbibresource{main.bib} % The filename of the bibliography
+\usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
+\usepackage{multirow}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{pgfmath}
+\usepackage{pgffor}
+\usepackage{pdflscape}
+\usepackage{rotating}
+\usepackage{lineno}
+\usepackage{enumitem}
+\usepackage{courier}
+\usepackage{booktabs}
+\usepackage{afterpage}
+\usepackage{xspace}
+\usepackage{hhline}
+\usepackage{braket}
+\usepackage[final]{pdfpages}
+% \usepackage{hyperref}
+\usepackage{CJKutf8}
+
+
+
+% \captionsetup{justification=raggedright, singlelinecheck=false, format=hang}
+\captionsetup{margin=0cm, justification=raggedright, singlelinecheck=true, format=plain}
+
+\renewcommand{\arraystretch}{1.2}
+\DeclareMathOperator{\erf}{erf}
+
+\newcommand{\pT}{\ensuremath{p_{T}}\xspace}
+\newcommand{\PT}{\ensuremath{p_{T}}\xspace}
+\newcommand{\Mx}{\ensuremath{\tilde{M_{X}}}\xspace}
+\newcommand{\Hgg}{\ensuremath{H\to\gamma\gamma}\xspace}
+\newcommand{\Hbb}{\ensuremath{H\to b\bar{b}}\xspace}
+\newcommand{\ttbar}{\ensuremath{t\bar{t}}\xspace}
+\newcommand{\HH}{\ensuremath{HH}\xspace}
+\newcommand{\Z}{\ensuremath{Z}\xspace}
+\newcommand{\GeV}{GeV}
+% \newcommand{\ell}{\ensuremath{ll}}
+\newcommand{\bbgg}{\ensuremath{b\bar{b}\gamma\gamma}\xspace}
+% \newcommand{\gg}{\ensuremath{\gamma\gamma}\xspace}
+\newcommand{\HHbbgg}{\ensuremath{HH\to b\bar{b}\gamma\gamma}\xspace}
+\newcommand{\bbbb}{\ensuremath{b\bar{b}b\bar{b}}\xspace}
+\newcommand{\DR}{\ensuremath{\Delta R}\xspace}
+% \newcommand{\MET}{\ensuremath{E_{T}^{miss}}\xspace}
+\newcommand{\MET}{MET\xspace}
+\newcommand{\Mgg}{\ensuremath{m_{\gamma\gamma}}\xspace}
+\newcommand{\Mjj}{\ensuremath{m_{\rm jj}}\xspace}
+
+\newcommand\blankpage{
+  \null
+  \thispagestyle{empty}
+  \addtocounter{page}{-1}
+  \newpage
+}
+
+%----------------------------------------------------------------------------------------
+%	MARGIN SETTINGS
+%----------------------------------------------------------------------------------------
+
+\geometry{
+  paper=a4paper, % Change to letterpaper for US letter
+  inner=2.0cm, % Inner margin 2.5cm
+  outer=2.2cm, % Outer margin 3.8cm
+  bindingoffset=2cm, % Binding offset
+  top=1.5cm, % Top margin
+  bottom=1.5cm, % Bottom margin
+  %showframe,% show how the type block is set on the page
+}
+
+%----------------------------------------------------------------------------------------
+%	THESIS INFORMATION
+%----------------------------------------------------------------------------------------
+
+\thesistitle{Search for the production of two Higgs bosons in the final state with two photons and two b quarks in proton-proton collision at $\sqrt{s}$ = 13 TeV} % Your thesis title, this is used in the title and abstract, print it elsewhere with \ttitle
+\supervisor{Kuo, Chia-Ming} % Your supervisor's name, this is used in the title page, print it elsewhere with \supname
+\examiner{Kao, Chung Wen} % Your examiner's name, this is not currently used anywhere in the template, print it elsewhere with \examname
+\degree{Master of Physics} % Your degree name, this is used in the title page and abstract, print it elsewhere with \degreename
+\author{Yeh, Cheng-Wei} % Your name, this is used in the title page and abstract, print it elsewhere with \authorname
+%\addresses{} % Your address, this is not currently used anywhere in the template, print it elsewhere with \addressname
+%\subject{Physical Sciences} % Your subject area, this is not currently used anywhere in the template, print it elsewhere with \subjectname
+%\keywords{} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
+\university{National Central University} % Your university's name and URL, this is used in the title page and abstract, print it elsewhere with \univname
+\department{Department of Physics} % Your department's name and URL, this is used in the title page and abstract, print it elsewhere with \deptname
+%\group{High Energy Physics Experiment} % Your research group's name and URL, this is used in the title page, print it elsewhere with \groupname
+%\faculty{} % Your faculty's name and URL, this is used in the title page and abstract, print it elsewhere with \facname
+
+\hypersetup{pdftitle=\ttitle} % Set the PDF's title to your title
+\hypersetup{pdfauthor=\authorname} % Set the PDF's author to your name
+%\hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
+
+\begin{document}
+
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+\pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
+
+\afterpage{\blankpage} % Add a new blank page without page number
+\includepdf{cover2.pdf}
+
+\afterpage{\blankpage}
+\includepdf{OralPage_1.pdf}
+
+\afterpage{\blankpage}
+\includepdf{OralPage_2.pdf}
+
+\afterpage{\blankpage}
+\includepdf{OralPage_3.pdf}
+
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+  \begin{center} \setstretch{1.15}
+    {\Large \bfseries \ttitle \par}
+    \bigskip
+    {\normalsize by \par}
+    \bigskip
+    {\large \authorname \par}
+    \bigskip
+    {\normalsize Submitted to the \deptname \par in partial fulfillment of the requirements for the degree of \par}
+    \bigskip
+    {\large \degreename \par}
+    \bigskip    
+    {at the \par}
+    \bigskip
+    {\large \MakeUppercase{\univname} \par}
+    \bigskip
+    {\normalsize June 2018 \par}
+    \bigskip
+    {\textcopyright \space \univname \space 2018. All rights reserved. \par}
+    \bigskip \bigskip \bigskip 
+    \begin{flushleft}
+      {\large Author \dotfill \par}
+    \end{flushleft}
+    \begin{flushright} 
+      {\deptname \par \today \par}
+    \end{flushright}
+    \begin{flushleft}
+      {\large Certified by \dotfill \par}
+    \end{flushleft}
+    \begin{flushright} 
+      {\supname \par Associate Professor \par Thesis Supervisor \par}
+    \end{flushright}
+    % \begin{flushleft}
+      % {\large Accepted by \dotfill \par}
+    % \end{flushleft}
+    % \begin{flushright} 
+      % {\examname \par Professor \par Chairman, Thesis Committee \par}
+    % \end{flushright}
+  \end{center}
+\end{titlepage}
+
+%\cleardoublepage
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{abstract} \setstretch{1.15}
+%  \addchaptertocentry{\abstractname} % Add the abstract to the table of contents
+
+  \noindent{\large \textbf{Abstract} \par}
+  \bigskip
+  \noindent{
+  % The production of a pair of Higgs bosons is a rare process in proton-proton collisions.
+  % There are two kinds of production.
+  % One is that the Standard Model (SM) predicts that the Higgs boson pairs can be from Higgs self-interactions, which called non-resonant process.
+  % This process can help us to understand the Higgs self-coupling constant and the structure of Higgs scalar potential field.
+  % Another one is predicted by many theories beyond the SM.
+  % There are some kinds of new particles which can decay into two Higgs and form the resonance peak in the mass spectrum of di-Higgs.
+  % Two decay channels are used in this study: $H\rightarrow$ $bb$ with high branching ratio and $H\rightarrow \gamma \gamma$ with good energy resolution.
+  The search is presented for the production of a pair of Higgs bosons in the final state with two photons and two b quarks by full 2016 data, which corresponds to an integrated luminosity of 35.9 $fb^{-1}$ recorded by the CMS detector.
+  Both resonant and non-resonant processes are investigated for the Standard Model (SM) and the Beyond the Standard Model (BSM) theories.
+  The non-resonant production helps us to understand the Higgs field structure in the SM and other possible effects from BSMs.
+  The resonant production is predicted by many BSMs. In this thesis, the hypothesis with the spin-0 and spin-2 new heavy particles which can decay into two Higgs bosons is searched and compared with the prediction from the warped extra dimension theory.
+  The b-jet energy regression specifically developed for this analysis are employed to improve the sensitivity about 10\%.
+  The observed results agree with the standard model prediction, and the limits on the exclusion of the BSM productions are also set.
+  \par}
+  \bigskip
+  \noindent{Thesis Supervisor: \space \supname \par}
+  \noindent{Title: \space Associate Professor \par}
+  
+\end{abstract}
+% \afterpage{\blankpage}
+
+\include{abstract_zh}
+
+\include{acknowledgement_zh}
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Prints the main table of contents
+% \listoffigures % Prints the list of figures
+% \listoftables % Prints the list of tables
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
+
+\mainmatter % Begin numeric (1,2,3...) page numbering
+\pagestyle{thesis} % Return the page headers back to the "thesis" style
+
+% Include the chapters of the thesis as separate files from the Chapters folder
+% Uncomment the lines as you write the chapters
+
+% \begin{linenumbers} %Turn line numbers on unless it is the final version
+  
+  \include{Chapters/Chapter1}
+  \include{Chapters/Chapter2} 
+  \include{Chapters/Chapter3}
+  \include{Chapters/Chapter4}
+  \include{Chapters/Chapter5}
+  \include{Chapters/Chapter6}
+
+% \end{linenumbers}
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+
+\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
+
+% Include the appendices of the thesis as separate files from the Appendices folder
+% Uncomment the lines as you write the Appendices
+
+% \include{Appendices/AppendixA}
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+{\setstretch{1.15} \sloppy \printbibliography[heading=bibintoc]}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}  

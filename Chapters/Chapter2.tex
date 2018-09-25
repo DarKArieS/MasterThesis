@@ -1,0 +1,284 @@
+\chapter{The LHC Machine and the CMS detector} % Main chapter title
+
+\label{Chapter2} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+This thesis is based on the data of proton-proton collisions recorded by the Compact Muon Solenoid (CMS) at the Large Hadron Collider at CERN.
+The protons are accelerated at the energy of 6.5 TeV by the LHC and collided.
+This chapter presents the overview of the LHC and the CMS.
+
+\section{The Large Hadron Collider}
+
+The Large Hadron Collider is the largest and most powerful particle accelerator in the world.
+It consists of a 26.7 km superconducting ring with a number of accelerating structures, underground about 100 meters. 
+Fig.~\ref{fig:LHC} shows the location and the accelerator complex.
+The LHC is designed to accelerate and collide proton beams in the centre-of-mass energy of protons at 14 TeV with luminosity of $10^{34} cm^{-2}s^{-1}$.~\cite{Evans:2008zzb}
+
+The protons are born from the hydrogen atoms which are ionized by an electric field.
+The journey of protons begins in the linear accelerator, Linac2. The protons are accelerated to 50 MeV.
+Then the protons beam is injected into the Proton Synchrotron Booster (PSB), accelerated to 1.4 GeV, and fed to the Proton Synchrotron to be accelerated to 25 GeV.
+Next, they are sent to the Super Proton Synchrotron to be accelerate to 450 GeV. 
+Finally, they are transferred to the two separate beam pipes of the Large Hadron Collider (LHC), split up into clockwise and anti-clockwise direction.
+The protons are accelerated to 6.5 TeV in the LHC, travel in the speed about 99.99\% times the speed of light.
+The superconducting dipole magnets providing about 8 $T$ magnetic field are used to keep the particles in their circular orbits.
+The collisions occur at the intersection points in the LHC rings. There are four intersection points used for the experiments: CMS, ATLAS, LHCb and ALICE.
+The quadrupole magnets focus the two beams to perform a bunch crossing, enhance the probability of the collisions.
+Under normal operating conditions, the LHC provides a proton beam containing 2808 bunches.
+The bunch length is about 7.5 $cm$ and the spacing is 25 $ns$ (about 7.5 $m$). Each bunch is expected to contains about $1.15 \times 10^{11}$ protons. % ***
+
+In 2016, the centre-of-mass energy of protons reached 13 TeV.
+The maximum number of injected bunches are 2208.
+The beam intensity is up to $2.5 \times 10^{14}$, about $1.25 \times 10^{11}$ protons in each bunch.
+The peak instantaneous luminosity is $1.4 \times 10^{34} cm^{-2}s^{-1}$, 40\% above the design value.~\cite{LHCStatistics}
+The delivered integrated luminosity is 40.82 $fb^{-1}$ and 37.76 $fb^{-1}$ are recorded by the CMS. (Fig.~\ref{fig:lumi})~\cite{CMSLumiPublic}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.7\textwidth]{Figures/Chapter2/LHC.png}
+  \includegraphics[width=0.7\textwidth]{Figures/Chapter2/LHC_complex.jpg}
+  \caption{(Top) The LHC is located beneath the border between Switzerland and France. (Bottom) The accelerator complex of the LHC.}
+  \label{fig:LHC}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.7\textwidth]{Figures/Chapter2/int_lumi_per_day_cumulative_pp_2016.pdf}
+  \caption{The integrated luminosity delivered by the LHC and recorded by the CMS in 2016.}
+  \label{fig:lumi}
+\end{figure}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+
+\section{The Compact Muon Solenoid}
+
+The Compact Muon Solenoid (CMS) is a general-purpose detector at the LHC ~\cite{Chatrchyan:2008aa},
+designed to record the proton-proton collisions with high luminosity.
+% At the designed luminosity, about 20 inelastic collisions will be superimposed and about 1000 particles are produced every 25 $ns$.
+To increase the luminosity, the high intensity of protons released by the LHC can generate more inelastic interaction and produce about 1000 particles every 25 $ns$.
+In 2016, the average number of interaction vertices produced per bunch crossing, called pile-up, is up to 27 as shown in Fig~\ref{fig:CMS_PU}, which is about 25\% higher than 2012.
+The high pile-up effect is a grand challenge for reconstruction.
+Therefore, the detectors have to feature high granularity and fast response.
+The prime goals of the CMS are to verify the Standard Model and also to explore other BSM (beyond Standard Model) physics at TeV energy scale.
+The CMS detector is cylindrical symmetry around the beam axis, composed of a barrel and two endcaps with a diameter 15 $m$ and a length 28.7 $m$.
+It is quite compact with a weight about 14000 tonnes.
+The main components of the CMS are a superconducting solenoid electromagnet providing 3.8 Tesla magnetic field inside the solenoid,
+silicon tracking system, electromagnetic calorimeter, hadronic calorimeter, and also a muon detecting system outside of the solenoid. 
+The geometry of sub-detectors can be found in Fig.~\ref{fig:CMS}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.85\textwidth]{Figures/Chapter2/pileup_pp_2016.pdf}
+  \caption{The distribution of number of pile-up per bunch crossing in the CMS in 2016. The maximum number is up to 53 and the average is 27.}
+  \label{fig:CMS_PU}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.85\textwidth]{Figures/Chapter2/cms_120918_03.png}
+  \caption{A perspective view of the CMS detector.}
+  \label{fig:CMS}
+\end{figure}
+
+%-----------------------------------
+%	SUBSECTION 
+%-----------------------------------
+\subsection{Magnetic system}
+
+The magnetic system are a superconducting cylindrical coil with a length of 12.5 $m$ and a diameter of 6 $m$, designed to reach a uniform 4 $T$ field in a free bore.
+The superconducting coils are Rutherford-type cables made by NbTi conductor, form as the 4-layer winding, total 2168 turns operating current 19.5 $kA$, storing energy 2.69 $GJ$.~\cite{CMS:MagPrjt}
+The coils are in the cold box and cooled by the helium to 4.45 $K$ and insulated by a vacuum vessel.
+There is a steel yoke outside the solenoid, where the muon system is housed, to return the magnetic flux. The yoke comprises 5 wheels and 2 endcaps, composed of three layers each. 
+The magnetic field in the barrel and outer endcap return yoke is about 1.7 $T$ and points in a direction opposite to the direction of the field inside the coil.
+Inside the solenoid, the tracking system, electromagnetic calorimeter, and the hadronic calorimeter are installed.
+The muon system is outside the solenoid and interspersed in the return yoke.
+This system used to bend charged particles flying outward from the collision point helps to identify the charge and improves the measurement of momentum.
+
+\subsection{Tracking system} 
+
+The inner tracking system (tracker) surrounds the collision points and occupies a cylindrical volume with a length of 5.8 $m$ and a diameter of 2.5 $m$. 
+The solenoid provides a homogeneous magnetic field of 4 $T$ over the full tracker,
+and is expected to reconstruct the trajectories of charged particles with transverse momentum \pT around 0.8 GeV. %% should up to 0.6 GeV
+The reconstruction of trajectories is also used to reconstruct the primary vertex as well as secondary vertex, which is the most important part of the b-tagging technique.
+The tracker is based on the silicon detector technology. The charged particles cause small ionization current which can be measured when they pass through the silicon.
+It is composed of a pixel detector with 3 barrel layers and a silicon strip tracker with 10 barrel layers.
+For the two endcaps, each comprises 2 disks of pixel detector and 3 inner disk plus 9 outer disks of the strip trackers.
+The acceptance of the tracker is up to a pseudorapidity of $\vert\eta\vert < 2.5$.
+The full layout is shown in Fig.~\ref{fig:CMSTracker} and described in Tab.~\ref{tab:TrackerLayout}.~\cite{1748-0221-9-10-P10009}
+The size of each pixel cell is $100 \times 150$ $\mu m^{2}$, and provides the hit position resolution about 10 $\mu m$ in the transverse coordinate and 20-40 $\mu m$ in the longitudinal coordinate.
+Total 1440 pixel modules are used with 66 million readout channels.
+On the other hand, the strips tracker has 15148 modules with total 9.3 million strips, and provides position resolution in $r\phi$ approximately 13-38 $\mu m$ (TIB, TID), 18-47 $\mu m$ (TOB, TEC).
+More details can be found in Ref.~\cite{Karimaki:368412}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\textwidth]{Figures/Chapter2/tracker.png}
+  \caption{The layout of the trackers in r-z plane. The start point is the interaction point. The other components are Pixel Detector (PIXEL), Tracker Inner Barrel (TIB), Tracker Outer Barrel (TOB), Tracker Inner Disk (TID), and Track endcap (TEC).}
+  \label{fig:CMSTracker}
+\end{figure}
+
+
+\begin{table}[t]
+\caption{A summary table of the components of the tracker. Pitch in the barrel is the distancce between neighbouring strips. The barrel strips run parallel to the beam axis.}
+\centering
+\small
+\begin{tabular*}{\textwidth}{llll}
+\hline
+Tracker subsystem&Layers&Pitch&Location\\
+\hline
+Pixel tracker barrel&3 cylindrical& $100 \times 150$ $\mu m^{2} $ & $4.4<r<10.2$ $cm$\\
+Strip tracker inner barrel (TIB)&4 cylindrical& $80-120$ $\mu m $ & $20 < r < 55$ $cm$\\
+Strip tracker outer barrel (TOB)&6 cylindrical& $122-183$ $\mu m $ & $55 < r < 116$ $cm$\\
+\hline
+Pixel tracker endcap&2 disks& $100 \times 150$ $\mu m^{2} $ & $34.5 < \vert z \vert < 46.5$ $cm$\\
+Strip tracker inner disks (TID)&3 disks& $100-141$ $\mu m $ & $58 < \vert z \vert < 124$ $cm$\\
+Strip tracker endcap (TEC)&9 disks& $97-184$ $\mu m $ & $124 < \vert z \vert < 282$ $cm$\\
+\hline
+\end{tabular*}
+\label{tab:TrackerLayout}
+\end{table}
+
+\subsection{Electromagnetic calorimeter (ECAL)}
+
+The electromagnetic calorimeter (ECAL) in CMS is a hermetic homogeneous calorimeter, is able to obstruct the electromagnetic (EM) particles and measures their energy deposits and positions.
+One of the important tasks of ECAL is to explore the $H\rightarrow\gamma\gamma$ decay channel.
+The lead tungstate crystals $PbWO_{4}$ are used to be scintillators, which have short radiation length ($X_{0}$ = 0.89 cm) to stop the EM particles, small Moliere radius (2.2 cm) to have small electromagnetic showers.
+When EM particles strike a scintillator material, the material is excited and then emits light.
+The scintillation emission spectrum of the ECAL crystals peaks at around 440 $nm$. The emitted light is received by the photo diodes to measure the energy deposits of the incoming EM particles.
+About 80\% scintillation light is emitted in 25 $ns$. The time-response is fast to cope with the bunch crossing time of the LHC.
+Although the crystal is radiation hard, the radiation damage still affectes the transparency of the crystals. The correction for the transparency loss is needed. ~\cite{1742-6596-587-1-012001}
+
+ECAL is constructed with a barrel and two endcaps.
+The ECAL barrel (EB) covers the pseudorapidity range $\vert\eta\vert < 1.479$.
+It is constructed by 61200 crystals, and each of them is 22 $\times$ 22 $mm^{2}$ at the front face and 26 $\times$ 26 $mm^{2}$ at the rear face (0.0174 $\times$ 0.0174 in $\phi$-$\eta$), with a length 230 $mm$ (25.8 $X_{0}$). 
+The ECAL endcap (EE) covers the pseudorapidity range $1.479 < \vert\eta\vert < 3$.
+The crystal size is 28.62 $\times$ 28.62 $mm^{2}$ at the front face and 30 $\times$ 30 $mm^{2}$ at the rear face with a length 220 $mm$ (24.7 $X_{0}$).
+To suppress the background $\pi^{0}\rightarrow\gamma\gamma$ for $H\rightarrow\gamma\gamma$, the spatial resolution should be improved. 
+A sampling detector, Preshower (ES), installed in front of EE, covers the pseudorapidity range $1.65 < \vert\eta\vert < 2.61$.
+Each endcap contains two lead absorbers and two planes of silicon strips which are orthogonal to each other.
+The plane of silicon strips are behind the absorber to measure the EM showers from the incoming particles striking the absorber. The radiation length of the absorber is 2 $X_{0}$ for the front plane and 1 $X_{0}$ for the rear plane.
+The whole layout is shown in Fig.~\ref{fig:CMSECAL} and Fig.~\ref{fig:CMSPreshower}.
+More details can be found in Ref.~\cite{CMS:ECALprjt}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\textwidth]{Figures/Chapter2/ECAL.png}
+  \caption{The layout of ECAL.}
+  \label{fig:CMSECAL}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\textwidth]{Figures/Chapter2/Preshower.jpg}
+  \caption{The layout of Preshower.}
+  \label{fig:CMSPreshower}
+\end{figure}
+
+\clearpage
+
+\subsection{Hadronic calorimeter (HCAL)}
+
+The Hadron calorimeter is a sampling calorimeter surrounding the ECAL, designed to detect the strongly interacting particles and help to determine the missing energy.
+The HCAL is composed of four parts: barrel (HB), endcap (HE), outer (HO) and forward (HF). The longitudinal scheme is shown in Fig.~\ref{fig:CMSHCAL}.
+The barrel covers pseudorapidity range $\vert\eta\vert < 1.3$, between the outer extent of the ECAL (1.77 m) and inner extent of the magnetic coil (2.95 m). 
+The absorbers in HCAL barrel consist a front steel plate with a thickness 40 $mm$, 8 layers brass plates with a thickness 50.5 $mm$, 6 layers brass plates with thickness 56.5 $mm$ and a back steel plate with a thickness 75 $mm$. Total thickness is 5.82 interaction lengths at $90^{\circ}$.
+The brass materials are non-ferromagnetic and high nuclear interaction length, which are easy to be simulated and make the detector be more compact.
+The plastic scintillator behind the absorber is segmented in $\eta-\phi$ towers granularity 0.087 $\times$ 0.087, which is equivalent to the area of the 5 $\times$ 5 ECAL crystals.
+70000 tiles in the scintillators are connected to the wavelength shifting fibres which collect the emitted light and shift the blue-violet light to the green light.
+The endcaps cover the region $1.3 < \vert\eta\vert < 3$. The absorbers are 79-mm-thick brass plates.
+The granularity in $\eta-\phi$ is 0.087 $\times$ 0.087 for $\vert\eta\vert < 1.6$ and 0.17 $\times$ 0.17 for $\vert\eta\vert \geq 1.6$.
+The outer calorimeter is located outside the magnetic coil, is designed to complete the containment for hadron showers of HB and HE.
+The HO is placed as the first layer of the return yoke.
+The magnetic coil is used as an additional absorber equal to $1.4/sin\theta$ interaction length.
+At $\eta = 0$, the interaction length of the HB is minimum, there are two layers of scintillators with 19.5 cm thick piece of iron.
+Other wheels have a single layer. The granularity of HO is same as HB.
+Lastly, the two forward calorimeters (HF) are positioned at $3 < \vert\eta\vert < 5.2$, outside the muon chambers.
+The HF will experience extremely high particles fluxes, about 10 MGy in the LHC with an integrated luminosity $5 \times 10^{5}$ $pb^{-1}$.
+This calorimeter is sensitive to the EM component of showers, because the shower particles can achieve the energy above the Cherenkov threshold.
+The absorber in the HF is a cylindrical steel with an inner radius 12.5 $cm$, an outer radius 130 $cm$ and a length 165 $cm$ along z-axis.
+The granularity of HF is 0.175 $\times$ 0.175 in $\eta-\phi$ towers.
+More details can be found in Ref.~\cite{CMS:HCALTDR}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\textwidth]{Figures/Chapter2/HCAL.png}
+  \caption{Longitudinal view of the HCAL, showing the location of the barrel (HB), endcap (HE), outer (HO) and forward (HF) of HCAL.}
+  \label{fig:CMSHCAL}
+\end{figure}
+
+\subsection{Muon system} \label{ssec:muon}
+
+The particles produced from the collision are absorbed by the inner detectors with high probability.
+The most particles escape outside are muons, which provide an unmistakable signature.
+The muon system is able to identify muons, measure their momentum, and deal with the muon triggering.
+It is composed of a barrel and two endcaps with three kinds of gaseous detectors. 
+In the barrel region at $\vert\eta\vert < 1.2$, the muon rate is low and the 4-T magnetic field is quite uniform in the return yoke.
+The drift tube (DT) chambers with 400 $ns$ drifting time are used, which is interspersed among the layers of the return yoke, total 4 stations.
+3 stations are consisted of 8 chambers to measure in $r-\phi$ bending plane, and 4 chambers measure in $z$ direction.
+The other one station doesn't include the $z$-direction measurement, but provides the best angular resolution.
+The drift cells of each chamber are shifted by a half-cell to eliminate the gaps.
+In both endcaps at $0.9 < \vert\eta\vert < 2.4$, the muon rates are high and the magnetic field is non-uniform.
+The Cathode strip Chambers (CSC) are used for the endcaps, which have fast response and high radiation resistance.
+There are 4 stations in each endcap interspersed in the return yoke. Each strip is run radially outward and provides $r-\phi$ plane measurement.
+The anode wires are also used to measure the $\eta$ position and the beam-crossing time. They are perpendicular to the cathode strips.
+To have a better muon triggering, the resistive plate chambers (RPC) are added in both the barrel and endcaps at $\vert\eta\vert < 1.6$.
+The RPCs provide a fast response with good time resolution but coarse spatial resolution.
+It also helps to resolve the tracks from the multi-hits in a chamber.
+Full layout is shown in Fig.~\ref{fig:CMSMuon}.
+More details can be found in Ref.~\cite{CMS:MuonTDR}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\textwidth]{Figures/Chapter2/CMSMuon.png}
+  \caption{Layout of one quadrant of the muon system.}
+  \label{fig:CMSMuon}
+\end{figure}
+
+\subsection{Trigger and data acquisition system}
+
+At the designed luminosity in the LHC, there are about $10^{9}$ events generated per second, 
+which is impossible to process and store every event. Therefore, it is important to reduce the data rate and select the events we interest.
+The trigger system is the start of the event selection process in two steps -- level-1 trigger (L1) and high level trigger (HLT).
+
+The level-1 trigger is composed by custom-designed, large programmable electronics based on FPGA with maximum output rate 100 kHz, which are installed partly on the detectors. (Other parts are in the control room.)
+The L1 trigger has to analyze each bunch crossing every 25 $ns$ without any dead-time, but the trigger latency is 3.2 $\mu$$s$.
+The data are stored in the pipelined memories first and wait for the L1 trigger decision transmitted to the detector electronics within 3.2 $\mu$$s$.
+Due to the 3.2 $\mu$$s$ restriction, the event selection by L1 should rely on the coarser data and simple algorithm, from the calorimeters and muon system.
+
+There are three components of the L1: local, regional and global as shown in Fig.~\ref{fig:CMSTrigger}.
+The local trigger is based on the calorimeters and the muon trigger, respectively.	
+The calorimeter local triggers are done by the Trigger Primitive Generator circuit in each calorimeter cell and begins with the sum of the tower energy from ECAL, and HCAL.
+The regional calorimeter trigger (RCT) combines the information of all the local triggers of ECAL and HCAL to determine the trigger objects, such as photons, electrons, taus and jets.
+It also finds the isolated/non-isolated photons/electrons separately.
+Then the global calorimeter trigger (GCT) sorts trigger objects by the energy and quality, selects top 4 of each type of the trigger objects.
+It also calculates the total transverse energy and missing energy vector.
+The muon local triggers are composed of three different algorithms corresponding to the different kinds of muon chambers, which are described in Sec.~\ref{ssec:muon} and Ref.~\cite{Bayatyan:706847}.
+Then the Global Muon Trigger combines three local triggers and validates the muon sign, sorts muons by the energy and quality, selects top 4 of muons.
+Finally, the global trigger combines all information and makes a decision.
+
+Next, the data acquisition (DAQ) system receives the events which pass the L1 triggers and provide the computing power for the filter systems (HLT).
+The structure of the DAQ is shown in Fig.~\ref{fig:CMSDAQ}.
+The information will be transmitted to the DAQ, which are used, calculated by the global calorimeter trigger, the global muon trigger and the global trigger.
+One zero-suppressed event occupies about 1 MByte, the data flow to the DAQ is about 100 GByte/s.
+The computer farm of DAQ with thousands of commercial CPUs is designed to process such kind of huge data with more complex algorithms and performs the High Level Trigger.
+The High Level Triggers is similar to the off-line reconstruction, but more efficient and lower CPU-time-consuming. 
+The CMS software framework are used for the HLT and off-line reconstruction, which is open source and available in Ref.~\cite{CMSSW}.
+Finally, the rate of data recorded for off-line analysis is on the order of $10^{2}$ Hz.
+The more details about the HLT and DAQ are in Ref.~\cite{Cittolin:578006}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Figures/Chapter2/CMSTrigger.png}
+  \caption{Architecture of the CMS L1 trigger system.}
+  \label{fig:CMSTrigger}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\textwidth]{Figures/Chapter2/CMSDAQ.png}
+  \caption{Architecture of the CMS DAQ system.}
+  \label{fig:CMSDAQ}
+\end{figure}

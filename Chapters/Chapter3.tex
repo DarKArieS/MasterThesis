@@ -1,0 +1,1039 @@
+\chapter{Multivariate data analysis} % Main chapter title
+
+\label{Chapter3} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+\section{Toolkit for Multivariate Data Analysis (TMVA)}\label{sec:TMVA}
+
+To extract small signals from large data, the multivariate analysis (MVA) technique is used for signal/background classification and energy correction (regression).
+In this analysis, the Toolkit for Multivariate Data Analysis with ROOT~\cite{Hocker:2007ht} is used for photon identification, b-tag identification, b-jet energy regression, and the categorization. 
+It provides a machine-learning environment to process multivariate classification and regression techniques, which is deigned for high energy physics.
+The algorithms in TMVA belong to \lq\lq supervised learning\rq\rq .
+The events used for training contain known output target to build the prediction function that describes the decision boundary (classification) or the target value (regression).
+In this section, the MVA algorithm used in this analysis is introduced.
+
+\subsection{Boosted decision trees (BDT)}
+
+The MVA method often used in CMS to build classification models or regression functions is boosted decision trees (BDT).~\cite{Hocker:2007ht}
+A decision tree is a binary tree structured like Fig.~\ref{fig:BDT}.
+The tree starts from a root node containing the full training sample, and grows by creating splitting nodes repeatedly.
+Each branch node splits training data to left or right subsets by a discrimination of one variable.
+The discrimination is optimized to have the best separation power by scanning all variables.
+The range of each variable is divided into several grid points for scanning, which is set by \verb|nCut| in the program.
+There are several methods provided by TMVA to find the criteria.
+For classification, the default one is according to Gini index.
+The Gini index of a subset is defined as 
+\begin{equation} \label{eq:GiniIndex}
+  \begin{aligned}
+	Gini = p \cdot ( 1 - p ) ,
+  \end{aligned}
+\end{equation}
+where p is the signal purity $p = signal / (background + signal)$.
+The sum of the Gini index of two separated subsets weighted by their fraction of events should be minimum, which means that the purity is increased.
+To find the next node, the events in the subsets should be more than the setting of minimum number of events.
+The parameter given to the program \verb|MinNodeSize| defines the minimum percentage of training events in each node.
+The tree will grow until reaching the maximum depth, which is set by \verb|MaxDepth|. 
+Finally, the terminal nodes (leaves) are identified as signal-like or background-like according to the signal purity of the events in the nodes.
+
+For regression, the scheme is similar to classification. The criteria are found by average square error, which is defined by 
+\begin{equation} \label{eq:RegAvgSqrtErr}
+  \begin{aligned}
+	% Average\ square\ error = 1 / N \cdot \Sigma^{N}_{i}(y_{i}-\hat{y})^{2}
+	Average\ square\ error = \frac{\sum\limits_{i}^{N}(y_{i}-\hat{y})^{2}}{N} ,
+  \end{aligned}
+\end{equation}
+where N is the number of events in the node, $y$ is the value of the target variable of event $i$, $\hat{y}$ is the mean of all events in the node.
+The criteria with the smallest weighted sum of error value will be chosen. The leaves are labeled as the average value of the events in the nodes.
+
+In principle, a decision tree can grow until the signal and background are fully separated or predicts every target value in the training samples, like Fig.~\ref{fig:Overtraining}.
+However, this kind of model takes the random fluctuation and extreme events into account. It is too sensitive to the known training events and hard to give a general prediction for the test data. That is so-called overtraining (overfitting).
+To avoid overtraining, the decision tree needs to be pruned. 
+Also, a decision tree is altered easily by the statistical fluctuation of the training sample.
+The so-called \lq\lq boosting$\rq$$\rq$ technique is introduced to increase the stability.
+The same training events are used to grow different decision trees and form a forest.
+The parameter \verb|NTrees| defines the number of trees in the forest in the program.
+The forest is combined into one single BDT discriminator for classification problems or one target value for the regression.
+The detail of the boosting and pruning method used in this analysis is described in Sec.~\ref{ssec:GradBoost}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\textwidth]{Figures/Chapter3/BDT.png}
+  \caption{The schematic of a decision tree. The tree grows from the root node and is split by the scanned criterion "$x_{i} (> or <) c_{a}$" repeatedly until reaching the maximum depth. Finally, the terminal nodes (leaves) are identified as signal-like or background-like.}
+  \label{fig:BDT}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.92\textwidth]{Figures/Chapter3/Overtraining}
+  \caption{The sketch of overtraining for classification (left) and regression (right). The green curves are the model which is overtrained, and black curves are the expected general models.}
+  \label{fig:Overtraining}
+\end{figure}
+
+\subsection{Gradient Boosting and pruning} \label{ssec:GradBoost}
+
+Boosting is a kind of mathematical optimization to reduce bias in machine-learning.
+It describes that a strong learner (the built model which can predict the target precisely and is close to the truth function) can be formed by some weak learners (the models which have low classification power).
+% In the gradient boosting algorithm, it considers that a strong learner is the weighted sum of weak learners.
+In the gradient boosting algorithm, it starts from a weak learner $F_{0}$ function, then finds next stronger learner step by step:
+
+\begin{equation} \label{eq:GradLearner}
+  \begin{aligned}
+	% F(\mathbf{x}) = \Sigma^{M}_{m}\beta_{m}f_{m}(\mathbf{x})
+	F_{m}(\mathbf{x}) = F_{m-1}(\mathbf{x}) + h(\mathbf{x}), 1 \leq m \leq M ,
+  \end{aligned}
+\end{equation}
+where $\bf{x}$ is a vector which includes all input variables, $M$ is the number of trees we want to grow.
+
+% The boosting procedure seeks to minimize the deviation of a function $F(\bf{x})$ from the truth function, where $\bf{x}$ is a vector which includes all input variables.
+
+In each step, the deviation of the function $F_{m}(\bf{x})$ from the true function should be reduced.
+The deviation can be described by the so-called $loss function$.
+For binary classification (signal or background), the chosen loss function is the binomial log-likelihood loss
+\begin{equation} \label{eq:binaryLF}
+  \begin{aligned}
+	L(F,y) =  \ln (1+e^{-2F(\mathbf{x})y}) ,
+  \end{aligned}
+\end{equation}
+where $y$ is the output value of the true function (classification score) from the training sample.
+% Like the gradient descent, $h(\bf{x})$ parts can be derived from a first order derivative approach.
+From Eq.~\ref{eq:GradLearner}, the learner $h(\bf{x})$ is equal to $F_{m}(\mathbf{x}) - F_{m-1}(\mathbf{x})$, which is the deviation between a stronger learner and a weaker leaner.
+Like the gradient descent, $h(\bf{x})$ can be derived by the first order gradient of the $loss function$:
+\begin{equation} \label{eq:GradApproach}
+  \begin{aligned}
+	h(\mathbf{x}) = - \frac{\partial L(F_{m-1}(\mathbf{x}),y)}{\partial F_{m-1}(\mathbf{x})} .
+  \end{aligned}
+\end{equation}
+Then the tree of the function $h(\bf{x})$ grows and updates the $F_{m}(\bf{x})$ accordingly:
+\begin{equation} \label{eq:shrinkage}
+  \begin{aligned}
+	F_{m}(\mathbf{x}) = F_{m-1}(\mathbf{x}) + \nu\cdot\gamma\cdot h(\mathbf{x}) ,
+  \end{aligned}
+\end{equation}
+where $\nu$ is the \verb|shrinkage| parameter used to control the learning rate. Empirically, the small shrinkage (0.1-0.3) gives the better prediction.
+The distance of descent $\gamma$ is optimized to minimize the sum of deviation $\Sigma^{n}_{i=1}L(F_{m},y_{i})$ when growing the tree.
+After $M$ iterative steps, the final model $F_{M}$ is obtained as output model.
+
+For regression, the true value $y$ can be the target variable, and the Huber loose function is used:
+\begin{equation} \label{eq:HuberLF}
+  \begin{aligned}
+	L(F,y) = \begin{cases}
+		\ \frac{1}{2}(y-F)^{2} & |y-F|\leq\delta \\
+		\ \delta (|y-F|-\frac{\delta}{2}) & |y-F|>\delta
+	\end{cases}.
+  \end{aligned}
+\end{equation}
+
+The BDT method works best with the weak learners, which are the small trees with limited growth depth.
+It almost eliminates the tendency of overtraining, which typically grows huge trees.
+
+Pruning is the process to remove the statistically insignificant nodes from bottom up after the tree is built.
+Because the BDT method always grows small trees (tree depth about 2 to 6), the pruning is not needed, or only applied when the depth > 3.
+The cost-complexity pruning is used in this analysis.
+To decide which subtrees grown from the node $t$ in the tree $T$ should be pruned from $T$, the parameter is defined:
+\begin{equation} \label{eq:CostCplxGt}
+  \begin{aligned}
+	g(t) = \frac{R(t)-R(T)}{f(t)-1},
+  \end{aligned}
+\end{equation}
+where $R(t)$ is the error rate of this node and $R(T)$ is the sum of error rate of the leaves in the tree $T$.
+The function $f(t)$ is the number of leaves of the subtree grown from the node $t$, so $f(t)-1$ means the number of the pruned nodes (the leaves is not counted) when we want to prune this subtree.
+This parameter considers the discrimination power of the subtree.
+The algorithm starts from the whole tree $T_{0}$.
+The subtree $t_{0}$ with the minimum $g(t_{0})$ is pruned and we get the pruned tree $T_{1}$.
+This process is executed iteratively until $g(t_{n})$ is larger than the threshold which is set by \verb|PruneStrength| in the program.
+
+
+%
+% at TMVA source code, alpha calculated by : 
+% https://root.cern/doc/v610/CCPruner_8cxx_source.html
+% t->SetAlphaC((t->GetNodeResubstitutionEstimate() - t->GetResubstitutionEstimate())/(t->GetNLeafDaughters() - 1));
+% and the pruned tree is found until prunestrength < alpha
+% why alpha > 1.0 ??? how they calculate error rates ?
+
+% another class at TMVA: https://root.cern/doc/v610/classTMVA_1_1CostComplexityPruneTool.html
+% is this used?
+
+% ---------------------------------old and wrong -----------------------------------
+\begin{comment}
+The definition of cost-complexity function of a tree $T$ is defined as
+\begin{equation} \label{eq:CostCplxFct}
+  \begin{aligned}
+	R_{\alpha}(T) = R(T) + \alpha\cdot|f(T)| ,
+  \end{aligned}
+\end{equation}
+where $f(T)$ is the number of leaves of $T$. $R(T)$ is the error rate of T, which is the event weighted sum of impurity of each leaf.
+% R(T) = \sigma _{t} r(t)\cdot p(t), where t is the subtrees belongs T.
+% r(t): the misclassification rate
+% p(t): the fraction of events of the subtree
+It considers not only the purity of each leaf but also the number of nodes.
+$\alpha$ is a regularization parameter.
+The algorithm runs iterative steps to find out a pruned tree with the minimum $R_{\alpha}$ with certain $\alpha$.
+In first step, $\alpha$ starts from 0. The selected subtree $T$ with minimum $R_{\alpha}$ will be an overtrained huge tree with the lowest error rate.
+Then the subtrees of $T$ are scanned to find out a subtree $T_{1}$ with minimum $g(t)$, which is defined as
+\begin{equation} \label{eq:CostCplxGt}
+  \begin{aligned}
+	g(T_{1}) = \frac{R(T-T_{1})-R(T)}{|f(T)|-1} .
+  \end{aligned}
+\end{equation}
+If there are two subtrees with the same value, the subtree with less nodes will be selected.
+The tree $T^{1}=R(T-T_{1})$ with $\alpha_{1} = g(T_{1})$ which is smaller than \verb|PruneStrength| becomes a pruned candidate.
+In iterative steps, the algorithm starts from $T^{m - 1}$ and goes through the same process to find $T^{m}$ with $\alpha_{m}$, where m = 2, 3, ...., until running out of the tree.
+To choose $\alpha_{m}$, the cross validation by test samples will be used to find out minimum $R_{\alpha}$.
+
+% ----------------------------------------------old and wrong ----------------------------------------------------
+\end{comment}
+
+
+\section{Photon identification} \label{sec:phoID}
+
+% The specific identifications are built by BDT to improve the photon resolution and suppressed background.
+% These algorithms are developed for the discovery of $H \rightarrow \gamma\gamma$ channel in the LHC Run I.~\cite{1202.1487}
+% They are retuned for the LHC Run II to cover the higher collision energy and high pile-up environment.
+% Two identifications relative to photon are mentioned in this section.
+
+\subsection{Di-photon vertex identification}
+
+The specific identification for the vertex of $H \rightarrow \gamma\gamma$ is developed for the discovery of $H \rightarrow \gamma\gamma$ channel in the LHC Run I.~\cite{1202.1487} and retuned for the LHC Run II.
+The vertex choice for $H \rightarrow \gamma\gamma$ decay has a impact on the di-photon mass resolution.
+For example, the di-photon mass resolution as a function of the distance between the truth vertex and selected vertex is shown in Fig.~\ref{fig:phovtxResolution}.
+Because photons are not detected by the tracker, there is no tracks to reconstruct the vertex of $H \rightarrow \gamma\gamma$ decay.
+Moreover, the homogeneous ECAL of the CMS has no longitudinal space resolution.
+To choose the correct vertex, a BDT algorithm is built to estimate the probability of the right vertex of the di-photon.
+It exploits the tracks recoiling and also the tracks of electrons from photon conversions.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter3/phovtxResolution_half}
+  \caption{
+	The impact of the vertex reconstruction on the di-photon invariant mass resolution in gluon-gluon fusion \Hgg simulation.
+	The additional energy smearing is applied in blue as a function of the Z difference.
+	The mass resolution is calculated as effective sigma $\sigma_{eff}$, which is defined as the narrowest region which contains 68\% statistics of the full distribution.
+  } % ** need to check what is extra smearing?
+  \label{fig:phovtxResolution}
+\end{figure}
+
+For no converted events, three discriminating variables are defined:
+\begin{equation} \label{eq:vtxDis1}
+  \begin{aligned}
+	& sumpt2 = \sum\limits_{i} |\vec{p_{T}}^{i}|^{2} \\
+	& ptbal = - \sum\limits_{i}(\vec{p_{T}}^{i} \cdot \frac{\vec{p_{T}}^{\gamma\gamma}}{|\vec{p_{T}}^{\gamma\gamma}|}) \\
+	& ptasym = (|\sum\limits_{i}\vec{p_{T}}^{i}|-\vec{p_{T}}^{\gamma\gamma})/(|\sum\limits_{i}\vec{p_{T}}^{i}|+\vec{p_{T}}^{\gamma\gamma}) ,
+  \end{aligned}
+\end{equation}
+where $\vec{p_{T}}^{i}$ is the momentum of the i-th track associated with a given vertex and $\vec{p_{T}}^{\gamma\gamma}$ is the momentum of the photon pair.
+Their distributions are shown in Fig.~\ref{fig:vtxBDTtrackrecoiling}, which shows good discriminating power from the tracks recoiling the photon pair.
+These three variables are combined and built a first vertex identification MVA by BDT.
+The vertex with best MVA score is selected to be $H \rightarrow \gamma\gamma$ vertex.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.92\textwidth]{Figures/Chapter3/vtxBDTtrackrecoiling.png}
+  \caption{The variables of track recoiling for the right vertices matched to MC truth vertices (red) and for the wrong vertices failing the matching.}
+  \label{fig:vtxBDTtrackrecoiling}
+\end{figure}
+
+%%NOTE: this part is in flashggDiphotonProducer with "LegacyVtxSelector"
+%%store MVA0, MVA1, MVA2 for three best vtx and vtxprobmva_ for per-event vtx MVA
+%%use MVA0 (best vtx) to be primary vertex
+%%question: where is vtxprobmva_ used ????
+
+% For the case that at least one photon converts to a electron pair, there are two methods developed.
+% The concept is that extract the photon direction from the conversion first and then estimate the z position of the vertex in the beam line axis.
+% First method 
+
+% Second method
+
+
+
+% To built the per-event discriminator which describes that the probability of the chosen vertex is within 1 cm of the true vertex, the first three best vertices are chosen.
+% The second BDT discriminator is built by following input variables:
+
+
+
+
+\subsection{Photon identification}
+
+The goal of the photon identification is to distinguish the prompt photon through the non-prompt photon coming from the neutral mesons ($\pi^{0}$) with high momentum decaying into two photons, merged and detected as one photon.
+In the ECAL barrel, to separate of the two photons from $\pi^{0}$, the transverse momentum $p_{T}$ of $\pi^{0}$ should smaller than 15 GeV, where the distance between two photon is the same as the crystal size.
+Additionally, the photons converted into $e^{+}e^{-}$ in the tracker material are separated by the 3.8 T magnetic field, which lead the wilder shower in $\phi$ direction.
+Therefore, the photon isolation and shower shape variables are relied heavily in the identification.
+
+In the first step, the photons should be checked to be "conversion-safe electron veto" to reject the electrons.
+It requires that there is no charged-particle track with hit in the inner layer of the pixel detector matched the conversion vertex pointing to the clusters of photon candidates.
+After passing the veto, 99\% (97\%) photons survive with 5\% (20\%) electrons in the ECAL barrel (endcap). % have it updated in Run II?
+% Moreover, the more severe rejection of electrons which is called "pixel track seed veto" is applied.
+
+The multivariate photon identification is developed in the LHC Run I~\cite{1502.02702} and updated in Run II.
+It is trained by the EM-enriched $\gamma$ + jets simulated samples with BDT algorithm.
+The prompt photons matched to the photons in the generator level are used as signal, and the others are used as background.
+The $p_{T}$ and $\eta_{SC}$ distribution are weighted to the same between the signal and background to be kinematics independent.
+The classifiers for ECAL barrel and ECAL endcap are separated.
+The input variables are listed in Tab.~\ref{tab:PhoMVAinputvar}.
+The detailed TMVA modified options are as follows:
+
+\verb|BoostType=Grad:Shrinkage=0.1:MinNodeSize=5%|
+
+\verb|NTrees=2000:MaxDepth=6:nCuts=2000|
+
+\verb|PruneMethod=CostComplexity:PruneStrength=5|\\
+
+The BDT values of two working points are shown in Tab.~\ref{tab:phoMVAWP} with their corresponding efficiency.
+
+
+\begin{table}[h]
+\centering
+\caption{The input variables and their definition for photon MVA identification.}
+\label{tab:PhoMVAinputvar}\footnotesize 
+\begin{tabular}{|c|c|l|}
+\hline
+Type                          & Variable                                                                      & \multicolumn{1}{c|}{Definition}                                                                                                                                                                                                                                                                       \\ \hline
+\multirow{7}{*}{Shower shape} & \begin{tabular}[c]{@{}c@{}}$R_{9}$\\ ($E_{3\times 3}/E_{SC}$)\end{tabular}    & \begin{tabular}[c]{@{}l@{}}The energy ratio between the energy sum \\ of the 3 by 3 crystals surrounding the seed \\ crystal of the super cluster and the energy \\ sum of the super cluster.\end{tabular}                                                                                            \\ \cline{2-3} 
+                              & \begin{tabular}[c]{@{}c@{}}S4\\ ($E_{2\times 2}/E_{5 \times 5}$)\end{tabular} & \begin{tabular}[c]{@{}l@{}}The energy ratio between the energy sum \\ of the 2 by 2 crystals and the the energy \\ sum of the 5 by 5 crystals surrounding the \\ seed crystal of the super cluster.\end{tabular}                                                                                      \\ \cline{2-3} 
+                              & $\sigma_{i\eta i\eta}$                                                        & \begin{tabular}[c]{@{}l@{}}Lateral extension of the electromagnetic \\ shower measured in terms of crystal cells.\end{tabular}                                                                                                                                                                        \\ \cline{2-3} 
+                              & $\eta_{SC}$ width                                                             & \begin{tabular}[c]{@{}l@{}}The logarithmic energy weighted standard \\ deviation of single crystal $\eta$ within the \\ super cluster.\end{tabular}                                                                                                                                                   \\ \cline{2-3} 
+                              & $\phi_{SC}$ width                                                             & \begin{tabular}[c]{@{}l@{}}The logarithmic energy weighted standard \\ deviation of single crystal $\phi$ within the\\  super cluster.\end{tabular}                                                                                                                                                   \\ \cline{2-3} 
+                              & $cov_{i\eta i\eta}$                                                           & \begin{tabular}[c]{@{}l@{}}The covariance of the single crystal $\eta$ and $\phi$ \\ in terms of crystal cells within the 5x5 crystals \\ centered on the super cluster seed crystal.\end{tabular}                                                                                                    \\ \cline{2-3} 
+                              & \begin{tabular}[c]{@{}c@{}}ES $\sigma_{RR}$\\ (endcap only)\end{tabular}      & \begin{tabular}[c]{@{}l@{}}The standard deviation of the shower spread \\ in the x and y planes of the preshower detector.\end{tabular}                                                                                                                                                               \\ \hline
+\multirow{3}{*}{Isolation}    & Photon isolation                                                              & \begin{tabular}[c]{@{}l@{}}Transverse energy sum associated with all \\ particles identified as photons by the \\ particle-flow algorithm falling inside a cone \\ size $\Delta R$=0.3 around the photon \\ candidate direction.\end{tabular}                                                         \\ \cline{2-3} 
+                              & Charged isolation                                                             & \begin{tabular}[c]{@{}l@{}}Transverse energy sum associate with all \\ particles identified as charged hadrons by \\ the particle-flow algorithm falling inside \\ a cone size $\Delta R$=0.3 around the photon \\ candidate direction. Measured with respect to \\ the selected vertex.\end{tabular} \\ \cline{2-3} 
+                              & \begin{tabular}[c]{@{}c@{}}Charged isolation\\ (worst vertex)\end{tabular}    & \begin{tabular}[c]{@{}l@{}}Same as charged isolation but measured \\ with respect to the worst vertex.\end{tabular}                                                                                                                                                                                   \\ \hline
+\multirow{5}{*}{Other}        & $\eta_{SC}$                                                                   & The $\eta$ in the detector-based coordinate.                                                                                                                                                                                                                                                          \\ \cline{2-3} 
+                              & $\phi_{SC}$                                                                   & The $\phi$ in the detector-based coordinate.                                                                                                                                                                                                                                                          \\ \cline{2-3} 
+                              & Raw $E_{SC}$                                                                  & \begin{tabular}[c]{@{}l@{}}The energy sum of super cluster without \\ correction.\end{tabular}                                                                                                                                                                                                        \\ \cline{2-3} 
+                              & $\rho$                                                                        & \begin{tabular}[c]{@{}l@{}}The energy median density per unit area in \\ the event.\end{tabular}                                                                                                                                                                                                      \\ \cline{2-3} 
+                              & \begin{tabular}[c]{@{}c@{}}$E_{ES}$/$E_{Raw}$\\ (endcap only)\end{tabular}    & \begin{tabular}[c]{@{}l@{}}The ratio between the sum of the energy \\ deposits in the preshower detector and the \\ energy of photon without correction.\end{tabular}                                                                                                                                 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{The working points of photon MVA identification.}
+\label{tab:phoMVAWP}
+\begin{tabular}{|c|c|c|}
+\hline
+Category                                              & \begin{tabular}[c]{@{}c@{}}90\% efficiency working point \\ (WP90)\end{tabular} & \begin{tabular}[c]{@{}c@{}}80\% efficiency working point \\ (WP80)\end{tabular} \\ \hline
+\begin{tabular}[c]{@{}c@{}}ECAL\\ Barrel\end{tabular} & \textgreater 0.20                                                               & \textgreater 0.68                                                               \\ \hline
+\begin{tabular}[c]{@{}c@{}}ECAL\\ Endcap\end{tabular} & \textgreater 0.20                                                               & \textgreater 0.60                                                               \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Photon energy regression}
+
+%% they use GBR likelihood :0
+%% AN 2013-253
+
+To have better energy resolution in the photon energy measurement, the photon energy regression is developed.~\cite{1502.02702}
+This regression is used to recover the effects from the local containment of the photon shower, such as the energy losses in the gaps and cracks of the ECAL, and the global containment, such as the converted photon showers and the pile-up.
+The training is performed for ECAL barrel and endcap separately by the double photon-gun simulated samples with about 5 million events.
+They are trained by the semi-parametric likelihood technique, which combines the parametric likelihood fit on the target variable with the double-sided Crystal-Ball function (see Eq.~\ref{eq:DoubleCB}) and the non-parametric fit by BDT technique.
+The source code can be found at Ref.~\cite{GBRlikelihood}.
+The input variables rely on the energy ratios in different selected crystals, $H/E$ (the ratio between the hadronic energy and electromagnetic energy), $\rho$, number of primary vertex, the shower shape variables and the preshower energies (only for endcap region). 
+Some definitions are already mentioned in Tab.~\ref{tab:PhoMVAinputvar}. 
+
+An example of the performance of the regression is given in Fig.~\ref{fig:PhoReg}, which show the comparison of the ratios between reconstructed energy and true energy before/after regression.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.9\textwidth]{Figures/Chapter3/PhoReg}
+  \caption{The distribution of ratio between photon reconstructed energy and true energy in the SM-like $\Hgg$ samples before (blue line) and after (ref line) regression in the ECAL barrel (left) and endcap (right).}
+  \label{fig:PhoReg}
+\end{figure}
+
+\section{B-jet identification} \label{sec:btag}
+
+Many researches for QCD, Standard Model and new physics rely on the b-quark final states as probes, because their production is perturbatively calculable.~\cite{hep-ph/0005110}
+% The identification of jets fragmented from b quarks, known as $b-tagging$, is the keypoint.
+% To extract the b jets from other light jets, which are originated from gluons, up and down quarks, the algorithm exploits the specific properties of b hadrons 
+In experiment, extraction b jets from other light jets, which are originated from gluons, up and down quarks, is the key-point to reject the background.
+The b-tag algorithm exploits the specific properties of b hadrons: the long lifetime ($\sim$ 1.5 ps) and large mass ($\sim$ 5GeV).
+The long lifetime leads to have a large impact parameter (IP) and form a secondary vertex (SV) displaced from primary vertex (PV), like Fig.~\ref{fig:SecVtx}.
+In addition, the b hadronization process has high track multiplicity, hard fragmentation function and high semiletonic branching ratio.
+Due to the hard fragmentation function, the b hadron in the jets carries large momentum from the original b quark.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter3/SecVtx.png}
+  \caption{The sketch of the secondary vertex with large impact parameter $d_{0}$ and 2D flight distance from the primary vertex $L_{xy}$.}
+  \label{fig:SecVtx}
+\end{figure}
+
+% In CMS, the well-designed track system is able to identified b jets.
+In CMS, the well-designed track system is able to identified b jets.
+The b-tagging algorithm used in this analysis is Combined Secondary Vertex Version 2 (CSVv2)~\cite{CMS-PAS-BTV-15-001}, which combines the information of displaced tracks and secondary vertices.
+The anti-$k_{T}$ jet algorithm with a distance parameter $R=0.4$ is used to reconstruct the jets.~\cite{1126-6708-2008-04-063}
+Tracks associated to the jets passing the criteria, which is shown in Tab.~\ref{tab:btagtrksl}, are selected to derive a series of track-based variables.
+If there is no selected track, the negative value is sent to the algorithm.
+
+\begin{table}[h]
+\centering
+\caption{The selection of tracks for b-tagging}
+\begin{tabular}{ll}
+\hline
+Track variable                            & Requirement          \\ \hline
+number of pixel hit                       & \textgreater= 1      \\
+track transverse impact parameter |IP2D|  & \textless 0.2 cm     \\
+track transverse momentum \PT             & \textgreater 1 GeV/c \\
+track normalized $\chi^{2}$               & \textless 5          \\
+track longitudinal impact parameter |IPz| & \textless 17 cm      \\
+track distance to jet axis                & \textless 0.07 cm    \\
+track decay length                        & \textless 5 cm       \\ \hline
+\end{tabular}
+\label{tab:btagtrksl}
+\end{table}
+
+In version 2, Inclusive Vertex Finder algorithm is used to reconstruct the secondary vertices.~\cite{1102.3194}
+To increase efficiency, this algorithm is independent from the jet algorithm.
+All reconstructed tracks in the collision event passing a looser requirements are input.
+The tracks are required to have at least 8 hits at the tracker, \PT greater than 0.8 \GeV~and the longitudinal impact parameter (IP) smaller than 0.3 cm.
+The tracks with large impact parameter (at least 50 $\mu m$) and impact parameter significance\footnote{the impact parameter significance is defined as the impact parameter divided by its uncertainty. The same definition is used for the 2D (3D) distance.} (at least 1.2) are referred to as seeds.
+Other tracks near the seed are selected to form a cluster by the distance and angle between them.
+The clusters are fitted by the adaptive vertex fitter algorithm to identify the vertices.
+The vertices are merged when they share 70\% of the tracks and have small distance significance (less than 2).
+At this stage, both the primary vertex and the secondary vertex are found.
+One track can be included by the PV and the SV simultaneously. The tracks are removed from the SV when they have less then 1 hit in the pixel detector or when they are more compatible with the PV.
+If there are still at least two tracks existing, the vertex is refitted. The vertex is removed when they share 20\% of the tracks and have small distance significance (less than 10).
+The remaining SV candidates are selected by the criteria:
+\begin{itemize}
+\item the fraction of shared tracks between the secondary vertex candidate and the primary vertex should not exceed 79\% ;
+\item the angular distance between the jet axis and the secondary flight direction \DR is required to be smaller than 0.3 ;
+\item the 2D flight distance significance should be at least 2 ;
+\end{itemize}
+
+There are three categories of SV reconstruction: the event contains real SVs, pseudo vertex or no vertex.
+In the case of pseudo vertex, there is no real secondary vertex reconstructed.
+The jet contains at least two tracks which are not in the $K^{0}$ mass window of 50 MeV and signed impact parameter significance exceeding 2. %%need to fix, fixed.
+In the case of no vertex, only the information about the displaced track is employed.
+Finally, the track-based variables and secondary vertex variables are combined by MVA technique.
+A special tuned MVA based on CMSSW~\cite{CMSSW} for b-tagging are developed to evaluate the discriminator.
+The multi-layer perception technique, which is so-called neural network, is used. The tools and the details can be found at~\cite{CMSSWMVA}.
+The summary of input variables can be found in Tab.~\ref{tab:btaginput}.
+\begin{table}[h]
+\centering
+\caption{The input variables for CSVv2 training.}
+\small
+\begin{tabular}{llll}
+\hline
+Variable & \begin{tabular}[c]{@{}l@{}}Reco\\ Vertex\end{tabular} & \begin{tabular}[c]{@{}l@{}}Pseudo\\ Vertex\end{tabular} & \begin{tabular}[c]{@{}l@{}}No\\ Vertex\end{tabular} \\ \hline
+the vertex category & 0 & 1 & 2 \\
+2D flight distance significance & used & n/a & n/a \\
+vertex mass & used & used & n/a \\
+number of tracks at the vertex & used & used & n/a \\
+\begin{tabular}[c]{@{}l@{}}ratio of the energy carried by tracks \\ at the vertex with respect to all tracks in the jet\end{tabular} & used & used & n/a \\
+\begin{tabular}[c]{@{}l@{}}the pseudo-rapidity of the tracks \\ at the vertex with respect to the jet axis\end{tabular} & used & used & available \\
+2D IP significance of the first track & used & used & available \\
+3D signed IP significances for all tracks in the jet & used & used & used \\
+number of tracks in the jet & used & available & available \\
+\begin{tabular}[c]{@{}l@{}}\DR between the secondary vertex flight direction\\ and the jet axis\end{tabular} & used & available & n/a \\
+number of secondary vertices & used & n/a & n/a \\ \hline
+\end{tabular}
+\label{tab:btaginput}
+\end{table}
+
+Three kinds of samples with different selections are studied to realize the performance of algorithm in the data and the Monte-Carlo (MC) simulation: the multijet sample, the muon-enriched sample and the dilepton $\ttbar$ sample.
+For example, the combined b-tag discriminator in muon-enriched sample is shown in Fig.~\ref{fig:CSVv2Distribution}.~\cite{CMS-DP-2017-005}
+The good agreement between the data and MC is observed.
+In addition, the efficiency and the misidentification probability between data and MC is studied to determine the working points (WPs) and derive the scaling factors (SFs).
+The three WPs corresponding to the misidentification rate are shown in Tab.~\ref{tab:btagwp}.
+It provides a flexible b jet selection in different signal purity levels.
+The SFs depending on \PT, $\eta$ and the b-tagging score are applied to the MC simulation to correct the simulation predictions.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter3/CSVIVF_Log}
+  \caption{The distribution of CSVv2 discriminator in the muon-enriched sample compared with full 2016 data.}
+  \label{fig:CSVv2Distribution}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\caption{The working points of CSVv2 b-tag and corresponding selection efficiency in $t\bar{t}$ MC samples.} 
+\begin{tabular}{cccc}
+\hline
+Working Point & CSVv2 Threshold & \begin{tabular}[c]{@{}c@{}}Misidentification rate \\ for light jets\end{tabular} & Efficiency                  \\ \hline
+Loose         & 0.5426          & 10\%                                                                            & $\approx$ 83\% \\
+Medium        & 0.8484          & 1\%                                                                             & $\approx$ 69\% \\
+Tight         & 0.9535          & 0.1\%                                                                           & $\approx$ 49\% \\ \hline
+\end{tabular}
+\label{tab:btagwp}
+\end{table}
+
+% ** Problem: Only trained by data? how to separated signal and background?
+
+
+
+
+\clearpage
+%----------------------------------------------------------------------------------------
+%	SECTION 3
+%----------------------------------------------------------------------------------------
+\section{B-jet energy regression} \label{sec:breg}
+
+The reconstruction of Higgs decaying into $b\bar{b}$ final state is a basic component for this analysis.
+The semiletonic decay of b hadrons makes the b jet energy resolution worse, due to the undetectable neutrinos.
+To improve the signal sensitivity in this analysis, the di-jet invariant mass resolution should be optimized.
+The specific b jet energy regression for $\HH\to\bbgg$ analysis is implemented by MVA techniques with BDT algorithm.
+The regression provides the correction function for b jet energy that is applied after the standard CMS jet energy correction.
+It is trained by the jet kinematics, constituents, and also event-wide information in MC samples.
+The validation via real data is also checked.
+The details are introduced in this section.
+
+\subsection{Training samples}
+
+To avoid biases to the signal, the regression is trained on $X\to\HH\to\bbbb$ MC sample.
+It combines the samples with all mass points of the resonant $m_X$, which are listed in Tab.~\ref{tab:HbbbbSamples}.
+Input variables to the training include jet kinematics, energy deposited in the HCAL and vertex information (total of 15 variables), similar to the regression
+performed for $\Hbb$ analysis.~\cite{CMS-PAS-HIG-16-003}
+In addition to those, we include in the training the two variables related to missing transverse energy of the event (MET) and the distance between the two jets, $\Delta R(j,j)$.
+A summary of all input variables is shown in Tab.~\ref{tab:reg-vars}.
+
+\begin{table}[h]
+\caption{The samples used for b jet energy regression training. The label ``M-X'' indicates the resonant mass points.}
+\centering
+\begin{tabular}{ll}
+\hline
+Samples                                            & Number of events \\ \hline
+GluGluToRadionToHHTo4B\_M-260\_narrow\_13TeV       & 299996           \\
+GluGluToRadionToHHTo4B\_M-270\_narrow\_13TeV       & 299997           \\
+GluGluToRadionToHHTo4B\_M-300\_narrow\_13TeV       & 294392           \\
+GluGluToRadionToHHTo4B\_M-350\_narrow\_13TeV       & 299991           \\
+GluGluToRadionToHHTo4B\_M-400\_narrow\_13TeV       & 299991           \\
+GluGluToRadionToHHTo4B\_M-450\_narrow\_13TeV       & 99193            \\
+GluGluToRadionToHHTo4B\_M-500\_narrow\_13TeV       & 99995            \\
+GluGluToRadionToHHTo4B\_M-550\_narrow\_13TeV       & 99997            \\
+GluGluToRadionToHHTo4B\_M-600\_narrow\_13TeV       & 99596            \\
+GluGluToRadionToHHTo4B\_M-650\_narrow\_13TeV       & 99995            \\
+GluGluToRadionToHHTo4B\_M-750\_narrow\_13TeV       & 99785            \\
+GluGluToRadionToHHTo4B\_M-800\_narrow\_13TeV       & 99993            \\
+GluGluToRadionToHHTo4B\_M-900\_narrow\_13TeV       & 99980            \\
+GluGluToBulkGravitonToHHTo4B\_M-260\_narrow\_13TeV & 299997           \\
+GluGluToBulkGravitonToHHTo4B\_M-270\_narrow\_13TeV & 299989           \\
+GluGluToBulkGravitonToHHTo4B\_M-300\_narrow\_13TeV & 292395           \\
+GluGluToBulkGravitonToHHTo4B\_M-350\_narrow\_13TeV & 299994           \\
+GluGluToBulkGravitonToHHTo4B\_M-400\_narrow\_13TeV & 299794           \\
+GluGluToBulkGravitonToHHTo4B\_M-450\_narrow\_13TeV & 99995            \\
+GluGluToBulkGravitonToHHTo4B\_M-500\_narrow\_13TeV & 99993            \\
+GluGluToBulkGravitonToHHTo4B\_M-550\_narrow\_13TeV & 99994            \\
+GluGluToBulkGravitonToHHTo4B\_M-600\_narrow\_13TeV & 99991            \\
+GluGluToBulkGravitonToHHTo4B\_M-650\_narrow\_13TeV & 99188            \\
+GluGluToBulkGravitonToHHTo4B\_M-750\_narrow\_13TeV & 99183            \\
+GluGluToBulkGravitonToHHTo4B\_M-800\_narrow\_13TeV & 99980            \\
+GluGluToBulkGravitonToHHTo4B\_M-900\_narrow\_13TeV & 99981            \\ \hline
+\end{tabular}
+\label{tab:HbbbbSamples}
+\end{table}
+
+% \begin{table}[h]
+% \centering
+% \begin{tabular}{rl}
+% \hline
+% Input variables        & Jet kinematics: $\eta$, $\pT$, $m_T$\\
+% as in $\Hbb$ analysis  & Neutral hadron energy fraction, Photon energy fraction\\
+% regression:       & SecVtxdL, SecVtxdeL, SecVtxPt, SecVtxM, SecVtxNtrk\\
+                  % & Soft Lepton: \pT, \pT(rel), \DR \\
+                  % & \pT(Lead Track), Number of verteces\\\hline
+% \hline
+% Additional         & \\
+% variables for our  &\MET, $\Delta\phi(Jet, \MET)$, $\Delta R$(Leading jet, Trailing jet) \\
+% analysis:          & \\
+% \hline
+% \end{tabular}
+% \caption{Input variables used in TMVA regression. Upper part lists the
+  % variables that are also used in $\Hbb$ analysis, and the lower part
+  % lists additional variables.}
+% \label{tab:reg-vars}
+% \end{table}
+
+\begin{table}[h]
+\centering
+\caption{Input variables used in BDT regression. Upper part lists the
+  variables that are also used in $\Hbb$ analysis, and the lower part
+  lists additional variables.}
+\begin{tabular}{ll}
+\hline
+\multicolumn{2}{l}{Input variables as in $\Hbb$ analysis}                                                                                                      \\ \hline
+nPVs                      & Number of primary vertex of the event                                                                                              \\
+Jet $\PT$                 & Jet transverse momentum                                                                                                            \\
+Jet $\eta$                & Jet psudorapidity                                                                                                                  \\
+Jet $m_{T}$               & Jet transverse mass                                                                                                                \\
+Jet lead track $\PT$      & \begin{tabular}[c]{@{}l@{}}Transverse momentum of the leading track\\ in the jet\end{tabular}                                      \\
+Jet lepton $\PT$          & \begin{tabular}[c]{@{}l@{}}Transverse momentum of the leading lepton \\ candidate in the jet\end{tabular}                          \\
+Jet relative lepton $\PT$ & \begin{tabular}[c]{@{}l@{}}The projection of 4-momentum of the leading\\ lepton candidate in the jet on the jet axis.\end{tabular} \\
+$\Delta R$(Jet, lepton)   & \begin{tabular}[c]{@{}l@{}}The distance in the $\eta$-$\phi$ space of the lepton \\ in the jet and the jet\end{tabular}            \\
+Jet neHEF                 & Neutral hadron energy fraction of the jet                                                                                          \\
+Jet neEmF                 & Photon energy fraction of the jet                                                                                                  \\
+Jet vtx $\PT$             & $\PT$ of the jet secondary vertex                                                                                                  \\
+Jet vtx Mass              & Invariant mass of the jet secondary vertex                                                                                         \\
+Jet vtx 3d L              & \begin{tabular}[c]{@{}l@{}}The 3-d flight length of the jet secondary\\ vertex\end{tabular}                                        \\
+Jet vtx Ntrk              & \begin{tabular}[c]{@{}l@{}}Track multiplicity of the reconstructed\\ secondary vertex\end{tabular}                                 \\
+Jet vtx 3d eL             & \begin{tabular}[c]{@{}l@{}}Error on the 3-d flight length of the jet\\ secondary vertex\end{tabular}                               \\ \hline
+\multicolumn{2}{l}{Additional variables for this analysis}                                                                                                     \\ \hline
+$\MET$                    & Missing energy of the event                                                                                                        \\
+$\Delta\phi(Jet,\MET)$    & The difference $\phi$ of $\MET$ and the jet                                                                                        \\
+$\DR(Jet_{1}, Jet_{2})$   & The distance in the $\eta$-$\phi$ space of two jets                                                                                \\ \hline
+\end{tabular}
+\label{tab:reg-vars}
+\end{table}
+
+The target for the regression training is $\PT^{gen}/\PT^{reco}$,
+where the generated level jet labeled as ``gen'' and the reconstructed jet labeled as ``reco''.
+Standard gen-jet collection in CMS does not include the neutrinos, 
+so we add them manually from gen-particle collection, using $\DR$ cone of 0.4 for matching.
+
+Adding neutrinos to the gen-jet brings the energy of the jet closer to the energy of the original b-quark, which is illustrated in Fig.~\ref{fig:b-reg-quark}.
+The relative $p_{T}$ difference between b-quark and gen-jet is peak at zero and has narrower width after adding neutrinos.
+Due to the limit of the jet algorithm with $\DR$ cone of 0.4, the jet can't be exactly the same as the b-quark in the generator level.
+Fig.~\ref{fig:b-reg-jet-neutrino} shows additional distributions, also comparing the gen-jets with and without neutrino additions: invariant mass of the Higgs boson candidates and the $m_{jjjj}$. 
+Events from all mass samples are combined, which explains the shape of $m_{jjjj}$ distribution. 
+From these figures one can see the effects on the mass resolution of adding neutrinos to gen-jets.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/input_noBins_GenJetPtGenPtRel.pdf}
+  \caption{Relative \PT difference of the b-quark and the
+    corresponding gen-jet, obtained from $\HH\to\bbbb$ samples. Red
+    histogram is for gen-jets containing neutrinos, blue is for jets
+    without neutrinos.}
+  \label{fig:b-reg-quark}
+\end{figure}
+
+\begin{figure*}[h]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/input_noBins_jjMass_Jetgenjet}\hfil
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/input_noBins_jjjjMass_Jetgenjet}\hfil
+  \caption{$m_{jj}$ and $m_{jjjj}$ distributions using jets in all samples with
+    various $m_G$, obtained from $\HH\to\bbbb$ MC samples. Red
+    histograms for gen-jets containing neutrinos, blue for jets
+    without neutrinos.}
+  \label{fig:b-reg-jet-neutrino}
+\end{figure*}
+
+\subsection{Training method}
+
+For the training we select jets that satisfy the following criteria:
+\begin{itemize}
+\item Jets with $\PT > 20\GeV$, $|\eta| < 2.4$;
+\item Jets matched to the generated level jet within a cone $\DR<0.4$ (this matching is done as part of MiniAOD reconstruction);
+\item The events with two generated level \Hbb b-quarks pairs;
+\item Jets matched to a b-quark within a cone $\DR<0.4$;
+\end{itemize}
+After selection, about 5 million jets are used for training.
+The jet with the highest \PT is defined as leading jet and the other one is called trailing jet.
+We perform six different trainings to check the impact of additional variables:
+\begin{itemize}
+\item Using 15 variables based on $\Hbb$ training, listed in
+  Tab.~\ref{tab:reg-vars}. It is denoted as \textbf{Baseline} on the
+  figures below.
+\item Using 15 variables plus \MET and $\Delta\phi(Jet, \MET)$.
+\item Using 15 variables plus \MET , $\Delta\phi(Jet, \MET)$, and also
+  $\Delta R$(Leading jet, Trailing jet).  This training is denoted as
+  \textbf{full 15+3var} in the text.
+\item Using 15 variables as above but in addition, for each pair of
+  jets from the Higgs boson, the training is performed separately for
+  the leading and trailing jets. That is, two BDT functions are
+  derived, one for the leading and one for the trailing jet in the
+  event.  This method is denoted as \textbf{js} on the figures and in
+  the text.
+\item Using 15 plus \MET and $\Delta\phi(Jet, \MET)$ variables, and
+  separating the training for leading and trailing jets as above.
+\item Using 15 plus \MET, $\Delta\phi(Jet, \MET)$ and $\Delta R$
+  variables, and separating the training for leading and trailing jets
+  as above.
+\end{itemize}
+
+The regression is performed with the TMVA package, using BDT technique with gradient boosting. 500 decision trees with depth 5 
+are created to estimate the target. The pruning technique is applied.
+The detailed TMVA modified options are as follows:
+
+\verb|BoostType=Grad:Shrinkage=0.1:MinNodeSize=1%|
+
+\verb|NTrees=500:MaxDepth=5:nCuts=500|
+
+\verb|PruneMethod=CostComplexity:PruneStrength=5|\\
+Each parameter is already mentioned in Sec.~\ref{sec:TMVA}.
+
+\subsection{Performance}
+
+After the training is done, its performance is checked in the signal samples, $X\to\HH\to\bbgg$, at all mass points of $m_X$.  
+The selection is the same as the training samples. 
+All of our trainings are compared with the one done by $\Hbb$ analysis, which is denoted as \textbf{Hbb} on the figures.
+% The $\PT^{reco}$ of the reconstructed jet can be compared to the target $\PT^{gen}$ of the generated jet with neutrinos. An example of such distributions is shown in Fig.~\ref{fig:b-reg-pt-res} for the leading and trailing jets.
+The distribution of relative $\PT$ difference between the gen-jets and the reconstructed jets is shown in Fig.~\ref{fig:b-reg-pt-res} for the leading and trailing jets.
+From distributions such as in Fig.~\ref{fig:b-reg-pt-res} we obtain the mean value ($\mu$) for the \textbf{scale} and sigma ($\sigma$) for the \textbf{resolution}.
+The mean value and sigma are from the fit of Bukin function, which is the convolution of Gaussian + exponential function, defined in Eq.~\ref{eq:BukinFunc}.
+\begin{small}
+\begin{equation} \label{eq:BukinFunc}
+  \begin{aligned}
+	\mathcal{P}(x;x_{p},\sigma_{p},\xi,\rho_{1},\rho_{2}) = A_{p}exp\left[\frac{\xi\sqrt{\xi^{2}+1}(x-x_{1})\sqrt{2\ln2}}{\sigma_{p}(\sqrt{\xi^{2}+1}-\xi)^{2}\ln(\sqrt{\xi^{2}+1}+\xi)}+\rho(\frac{x-x_{i}}{x_{p}-x_{i}})^{2}-\ln2\right]
+	 \\ where \begin{cases}
+		\ \rho=\rho_{1}, x_{i}=x_{1}, & for\quad x < x_{1} \\
+		\ \rho=\rho_{2}, x_{i}=x_{2}, & for\quad x \geq x_{2}
+		\end{cases}
+	, \quad x_{1,2} = x_{p}+\sigma_{p}\sqrt{2\ln2}\left(\frac{\xi}{\sqrt{\xi+1}}\mp1\right)
+  \end{aligned}
+\end{equation}
+\end{small}
+The scale and resolution of the leading and trailing jets versus their \PT are shown in Fig.~\ref{fig:b-reg-jet-res}.
+From this figure we can conclude that adding MET variables into the training improves the resolution significantly.
+As expected the \textbf{15+3var js} training gives the best per-jet resolution across the whole \PT range.
+
+Fig.~\ref{fig:b-reg-ptcor-Lead} and ~\ref{fig:b-reg-ptcor-Trail} show the response of each input variable for leading and trailing jets.
+We check the average deviation of $\PT^{reco}$ from $\PT^{gen}$ as a function of each input variable before (in blue) and after (in pink) regression. 
+The \Hbb~training (in red) and our best training are compared.
+% As expected, after regression the correlation between \PT deviation and input variables is reduced.
+After regression, the \PT deviation is reduced to zero and becomes more stable as a function of each input variable.
+With the \textbf{15+3var js} training, the strongly dependence of the three additional variables is removed.
+For example, without regression, the \PT deviation of the jets with high MET is large because a part of energy of the jet is not detected and is included into MET.
+After our regression, these jets are corrected to become closer to the gen-jet.
+
+\begin{figure*}[bth]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_mass300_J1}\hfil
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_mass300_J2}\hfil
+  \caption{Relative \PT difference of the reconstructed and generated
+    level jets after regression (red histograms) and without
+    the regression (blue histograms).}
+  \label{fig:b-reg-pt-res}
+\end{figure*}
+
+\begin{figure*}[bth]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_HHbbgg_G_sigma_jet1pT}\hfil
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_HHbbgg_G_sigma_jet2pT}\hfil\\
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_HHbbgg_G_scale_jet1pT}\hfil
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_HHbbgg_G_scale_jet2pT}\hfil\\
+  \caption{The resolution of the jet \PT (top) and the scale (bottom),
+    for leading (left) and trailing (right) jets from the signal
+    sample $G\to\HH\to\bbgg$.}
+  \label{fig:b-reg-jet-res}
+\end{figure*}
+
+\begin{figure*}[bth]
+  \centering
+  \includegraphics[width=1\textwidth]{Figures/Chapter3/TPF_Target_Correlation_3cat_2b2g_Lead_0}\hfil
+  \includegraphics[width=1\textwidth]{Figures/Chapter3/TPF_Target_Correlation_3cat_2b2g_Lead_1}\hfil
+  \caption{The correlation between $(\PT^{reco}$-$\PT^{gen})$ $/$ $\PT^{gen}$ 
+  and input variables in leading jets, $X\to\HH\to\bbgg$ samples.}
+  \label{fig:b-reg-ptcor-Lead}
+\end{figure*}
+
+\begin{figure*}[bth]
+  \centering
+  \includegraphics[width=1\textwidth]{Figures/Chapter3/TPF_Target_Correlation_3cat_2b2g_Trail_0}\hfil
+  \includegraphics[width=1\textwidth]{Figures/Chapter3/TPF_Target_Correlation_3cat_2b2g_Trail_1}\hfil
+  \caption{The correlation between $(\PT^{reco}$-$\PT^{gen})$ $/$ $\PT^{gen}$
+  and input variables in trailing jets, $X\to\HH\to\bbgg$ samples.}
+  \label{fig:b-reg-ptcor-Trail}
+\end{figure*}
+
+\clearpage
+
+\subsubsection{Mass resolution}
+
+To obtain better signal modeling, the purpose of the regression is to improve the Higgs boson mass resolution from the $\Hbb$ decay in $X\to\HH\to\bbgg$ signal. 
+The distributions together with the fit by Bukin function are shown in
+Fig.~\ref{fig:b-reg-mH-fit-reco}, where the reconstructed mass is
+shown before and after applying the \textbf{full 15+3var js} regression training, for $m_G
+= 300\GeV$ and $m_G = 900\GeV$.
+
+After the fit to the corresponding function is done, we obtain the mean and the width parameter of the fit. 
+The width and mean (both in \GeV) are shown on Fig.~\ref{fig:b-reg-mH-res} versus the mass of the Graviton particle. 
+The regression also tested in the non-resonant samples, which is shown in Fig.~\ref{fig:b-reg-mH-nonres}.
+From these figures we arrive at the same conclusion
+as for single-jet plots of Fig.~\ref{fig:b-reg-jet-res}: the MET
+variables improve the resolution and the \textbf{full 15+3var js}
+training gives the best mass resolution. The training with \textbf{15}
+variables gives similar results to the \textbf{Hbb} training.  In all
+trainings the scale does not match the nominal value of the Higgs
+boson mass. This is expected because the jets (both at reco and gen
+levels) do not contain the whole energy of the Higgs boson decay.
+
+\begin{figure*}[thb]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_mass300}\hfil
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_mass900}\hfil
+  \caption{$M_{jj}$ distributions from the reco-jets before and after
+    the \textbf{full 15 variables with js} regression for $m_G=300\GeV$ signal sample
+    (left) and $m_G=900\GeV$ signal sample (right).}
+  \label{fig:b-reg-mH-fit-reco}
+\end{figure*}
+
+
+\begin{figure*}[thb]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_HHbbgg_G_sigma_Mass}\hfil
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_HHbbgg_G_scale_Mass}\hfil
+  \caption{Performance plot comparing different regression trainings in resonant signal samples.}
+  \label{fig:b-reg-mH-res}
+\end{figure*}
+
+\begin{figure*}[thb]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_HHbbgg_N_sigma_Mass}\hfil
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter3/AN_HHbbgg_N_scale_Mass}\hfil
+  \caption{Performance plot from $M_{jj}$ distributions comparing different regression trainings in non-resonant signal samples.}
+  \label{fig:b-reg-mH-nonres}
+\end{figure*}
+
+
+\clearpage
+
+\subsection{The improvement from the three additional input variables and 
+the training with leading and trailing jets separately}
+
+From previous sections, we know that the improvement from \MET, $\Delta\phi(Jet, \MET)$ is significant.
+For the $\Delta R$($Jet_{1}$, $Jet_{2}$), the training with separating leading and trailing jets is needed.
+
+Fig.~\ref{fig:b-reg-cor-DR} shows the correlation between $\Delta R$(Leading jet, Trailing jet) and other input variables.
+Some variables such as $\Delta R$(Jet, lepton), invariant mass of the jet secondary vertex and track multiplicity of the secondary vertex have interesting shape and are different between leading and trailing jets.
+With $\Delta R$($Jet_{1}$, $Jet_{2}$) and the training with leading and trailing jets separately, this correlation is taken into account.
+If we put the leading and trailing jets together, the correlation becomes smaller. 
+Just adding $\Delta R$($Jet_{1}$, $Jet_{2}$) does not give us the better result.
+
+Although $\Delta R$($Jet_{1}$, $Jet_{2}$) is highly jet-\PT dependent, Fig.~\ref{fig:b-reg-cor-jetPt} shows that the special shapes of these variables do not appear as a function of \PT of the jets.
+This special correlation just happens for $\Delta R$($Jet_{1}$, $Jet_{2}$).
+In addition, the other input variables have similar correlation with jet-\pT between leading and trailing jets.
+Without $\Delta R$($Jet_{1}$, $Jet_{2}$), the difference between leading and trailing jets depends on the \PT of jets in one event.
+That is why training leading and trailing jets separately without $\Delta R$($Jet_{1}$, $Jet_{2}$) doesn't lead the result to be better compared to the non-separate training.
+
+Adding $\Delta R$($Jet_{1}$, $Jet_{2}$) and training with leading and trailing jets separately gives BDT the strong information of the correlation between other input variables and $\Delta R$($Jet_{1}$, $Jet_{2}$).
+That's where the improvement comes.
+
+\begin{figure*}[thb]
+  \centering
+  \includegraphics[width=1\textwidth]{Figures/Chapter3/TPF_DeltaR_correlation_3cat_4b_2b2g_0}\hfil
+  \includegraphics[width=1\textwidth]{Figures/Chapter3/TPF_DeltaR_correlation_3cat_4b_2b2g_1}\hfil
+  \caption{The correlation between $\Delta R$(Leading jet, Trailing jet) and other input 
+  variables comparing leading jets (blue), trailing jets (red) and both jets (purple) in $G\to\HH\to\bbgg$ samples. 
+  The y-axis is the mean value of the input variables in different 
+  $\Delta R$(Leading jet, Trailing jet) bins.}
+  \label{fig:b-reg-cor-DR}
+\end{figure*}
+
+\begin{figure*}[thb]
+  \centering
+  \includegraphics[width=1\textwidth]{Figures/Chapter3/TPF_jetPt_correlation_4b_2b2g_0}\hfil
+  \includegraphics[width=1\textwidth]{Figures/Chapter3/TPF_jetPt_correlation_4b_2b2g_1}\hfil
+  \caption{The correlation between \PT and other input 
+  variables comparing leading jets, trailing jets  in $G\to\HH\to\bbgg$ samples. }
+  \label{fig:b-reg-cor-jetPt}
+\end{figure*}
+
+\clearpage
+
+\subsection{Data validation}
+
+In order to validate the developed regression in data we select events with $\Z\to\ell\ell$ decay which also contain two b-tagged jets.~\cite{1310.3687}
+It is assumed that a di-jet is recoiled against $\Z$ boson, and therefore the $\PT(jj)$ must balance the $\PT(\ell\ell)$.
+This check was done both in muon and electron channels of \Z~boson decay, analyzing \verb|DoubleMuon| and \verb|DoubleEG| full 2016 datasets, which collect the events passing di-muon and di-electron/di-photon triggers correspondingly. 
+
+\begin{table}[h]
+\centering
+\caption{The lepton selection corresponding to electron and muon channel}
+\begin{tabular}{l}
+\hline
+Electron channel from \verb|DoubleElectron| dataset                                                                                                                      \\ \hline
+pass trigger \verb|HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ|                                                                                         \\
+pass electron MVA ID WP90                                                                                                                                   \\ \hline\hline
+Muon channel from \verb|DoubleMuon| dataset                                                                                                                          \\ \hline
+\begin{tabular}[c]{@{}l@{}}pass trigger \verb|HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ|\\ or \verb|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ|\end{tabular} \\
+pass Tight muon ID and Loose particle flow isolation                                                                                                                    \\ \hline
+\end{tabular}
+\label{tab:Reg-Vali-Selection}
+\end{table}
+
+% In the muon channel the events were selected with an OR of
+% ~\\ \verb|HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ| and \\
+% \verb|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ| triggers and the
+% reconstructed muons must pass Tight muon ID and Loose PF
+% isolation. While in the electron channel the
+% \verb|HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ| trigger was used and
+% the electrons required to pass MVA ID WP90 selection.
+The leptons should pass the requirement corresponding to the electron and muon channel, which is shown in Tab.~\ref{tab:Reg-Vali-Selection}.
+Further event selection requirements in both channels are as follows:
+% $\PT(\ell_1) > 25\GeV$,
+% $\PT(\ell_2) > 15\GeV$, $\PT(\ell\ell) > 50\GeV$,
+% $75<m_{\ell\ell}<105\GeV$, $\Delta R^{min}_{\ell, jet} > 0.4$. The two
+% jets in the event must pass Loose PF ID selection, Medium pile up jet ID,
+% tagged as b-jets with CSVv2 Medium WP, and have $\PT>20\GeV$,
+% $|\eta|<2.4$.
+\begin{itemize}
+\item $\PT(\ell_1) > 25~\GeV$, $\PT(\ell_2) > 15~\GeV$ ;
+\item $\PT(\ell\ell) > 50~\GeV$ ;
+\item $75<m_{\ell\ell}<105~\GeV$ ;
+\item $\Delta R^{min}_{\ell, jet} > 0.4$ ;
+\item jet $\PT>20~\GeV$, $|\eta| < 2.4$ ;
+\item Both two jets pass Loose particle flow identification~\cite{CMS-PAS-JME-16-003}, medium pile up jet identification~\cite{CMS-PAS-JME-13-005}, tagged as b-jets with CSVv2 Medium WP ;
+
+\end{itemize}
+
+\begin{figure*}[thb]
+  \centering
+  \includegraphics[width=1\textwidth]{Figures/Chapter3/inputVar_Medium_jet_15plus3_js_2_27_TL_0}\hfil
+  \includegraphics[width=1\textwidth]{Figures/Chapter3/inputVar_Medium_jet_15plus3_js_2_27_TL_1}\hfil
+  \caption{The distribution of input variables comparing data and
+    MC. Electron and muon channels are combined.}
+  \label{fig:b-reg-vali-input}
+\end{figure*}
+
+\begin{figure*}[thb]
+  \centering
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_no_reg__PtBalance_mu_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_15plus3_js_2_27__PtBalance_mu_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_Hbb__PtBalance_mu_Medium}\hfil\\
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_no_reg__PtBalance_ele_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_15plus3_js_2_27__PtBalance_ele_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_Hbb__PtBalance_ele_Medium}\hfil\\
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_no_reg__PtBalance_all_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_15plus3_js_2_27__PtBalance_all_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_Hbb__PtBalance_ele_Medium}\hfil\\
+  \caption{Pt balance (ratio) of the di-jet and di-lepton. On the left
+    are the distributions without regression, in the center - using
+    \textbf{full 15+3var js} training and on the right - using
+    \textbf{Hbb} regression.  Top plots are for muon channel, middle
+    for electron channel and bottom is the combination (sum) of the
+    two.}
+  \label{fig:vali-pt}
+\end{figure*}
+
+
+Fig.~\ref{fig:b-reg-vali-input} shows the input variables in data and MC samples.
+Good agreement between data and MC is observed.
+Fig.~\ref{fig:vali-pt} shows the mentioned $\PT$-balance distributions, $\PT^{jj}/\PT^{\ell\ell}$.
+The data is compared to the MC predictions.
+It can be seen that before any regression is applied the peak of the ratio distribution is below one.
+With the regression applied the peak moves to 1 for both our \textbf{full 15 variables js} training (center) and the one from \textbf{Hbb} (right). 
+The response of the regression is the same in data and MC.
+This indicates that the regression does indeed brings the $\PT$ of the $b$-jets closer to their true values.
+
+Similarly, Fig.~\ref{fig:vali-Mjj} shows the mass distributions, $m_{jj}$, before and after regression.
+These figures indicate that $m_{jj}$ is not distorted in any bad way, and no artificial peaks are created.
+This ensures us that the background distributions in our analysis signal region will not be distorted either.
+
+
+\begin{figure*}[thb]
+  \centering
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_no_reg__Mjj_mu_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_15plus3_js_2_27__Mjj_mu_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_Hbb__Mjj_mu_Medium}\hfil\\
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_no_reg__Mjj_ele_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_15plus3_js_2_27__Mjj_ele_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_Hbb__Mjj_ele_Medium}\hfil\\
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_no_reg__Mjj_all_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_15plus3_js_2_27__Mjj_all_Medium}\hfil
+  \includegraphics[width=0.32\textwidth]{Figures/Chapter3/Vali_Data_MC_jet_Hbb__Mjj_all_Medium}\hfil\\
+  \caption{Distributions of the $m_{jj}$. On the left are plots with
+    no regression, in the center - using \textbf{full 15+3var js}
+    training and on the right - using \textbf{Hbb} regression.  Top
+    plots for muon channel, middle for electron channel and bottom is
+    the combination (sum) of the two.  }
+  \label{fig:vali-Mjj}
+\end{figure*}
+
+\clearpage
+
+\subsection{Impact on the results}
+
+In the SM-like HH search, the expected limit combining all categories (see next section) set on the cross-section of production is improved from 1.77 fb to 1.6 fb (10\%).
+The signal-over-background ratios in different categories are shown in Tab.~\ref{tab:BregImprovement}. %% need to check the meaning ?
+Fig.~\ref{fig:RegLimit} shows the expected limits for the non-resonance search with the recommended points in the anomalous couplings space.
+The improvements are from 10\% to 13\%, which depend on the benchmark points.
+
+\begin{table}[h]
+\centering
+\caption{The signal-over-background ratios in the search of SM-like HH production in different categories.
+The categories are labeled as low mass region (LM), high mass region (HM), high signal purity (HPC) and low signal purity (MPC).
+The details about categorization are described in Sec.~\ref{sec:catMVA}.
+}
+\label{tab:BregImprovement}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+            & LM HPC & LM MPC  & HM HPC & HM MPC  \\ \hline
+Nominal		& 0.2556 & 0.4425  & 3.9813 & 3.5879  \\ \hline
+Regressed	& 0.2675 & 0.5319  & 4.2661 & 4.1079  \\ \hline
+Improvement & 4.65\% & 20.02\% & 7.15\% & 14.49\% \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/Chapter3/breg_impact/BenchmarkPlot_noReg}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter3/breg_impact/BenchmarkPlot_regressed}\hfil
+  \caption{The upper limits at 95\% confidence level on the cross-section of non-resonance HH production in benchmark points before (left) and after (right) regression.}
+  \label{fig:RegLimit}
+\end{figure}
+
+
+\section{\HHbbgg~categorization MVA}\label{sec:catMVA}
+
+There are some kinematics variables found able to classify the background-like and signal-like events.
+These variables are combined to one BDT classification discriminator.
+To increase the sensitivity, the events are divided into two signal purity categories depending on the ratio of signal to background.
+
+The signal hypotheses are all signal samples described in Sec.~\ref{sec:ResonantMCsamples} and Sec.~\ref{sec:NonResonantMCsamples}.
+Both classifiers take the data control region as background, which is described in Sec.~\ref{ssec:photonselection}.
+Furthermore, we split the training into high mass region and low mass region by $\Mx$, the definition is mentioned in Sec.~\ref{ssec:diHiggsSelection}.
+In the resonance search, the high mass region is $\Mx > 350$ GeV.
+This region is optimized for the SM di-Higgs production because there is a smooth peak around 400 GeV in \Mx spectrum of SM-like process, shown in Fig.~\ref{fig:MxDistribution}.
+The low mass region $\Mx < 350$ GeV is also searched, since the anomalous coupling constant may distort the distribution and form a peak in low mass region.
+In the resonance search, the events are segmented by $\Mx = 600$ GeV.
+The low mass region contains higher background yields and lower signal efficiency, and the high mass region is inverse.
+This cut value is also checked to ensure both ensembles have enough statistics for training. 
+The BDT classifiers are trained for resonance and non-resonance searches in difference mass region separately.
+There are total four trainings.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter3/MxDistribution}
+  \caption{The \Mx spectrum of data and signal/background MC simulation after \HHbbgg selection, which is described in Ch.~\ref{Chapter4}.
+  The resonant signal is normalized to a cross section of 500 fb and SM-like signal is 5000 times higher than the SM prediction.}
+  \label{fig:MxDistribution}
+\end{figure}
+
+The training variables are described in Tab.~\ref{tab:CatMvaInputVar}, and the distribution of BDT discriminator of non-resonant high mass region is shown in Fig.~\ref{fig:CatMVA}.
+The values of the BDT discriminator used for categorization are optimized to reach the best sensitivity.
+A summary of categorization is shown in Tab.~\ref{tab:SummaryCat}.
+In the non-resonance low mass region, an additional requirement on the b-tag score corresponding to 80\% efficiency is applied.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter3/CatMVA}
+  \caption{The categorization MVA output distribution obtained from the non-resonance high mass region training. Data are compared with the SM-like signal samples through gluon-gluon fusion and vector boson fusion (VBF), the resonant signal samples, and the single-Higgs samples after full selections.}
+  \label{fig:CatMVA}
+\end{figure}
+
+
+\begin{table}[h]
+\centering
+\caption{The training variables of categorization MVA. }
+\label{tab:CatMvaInputVar}
+\begin{tabular}{rl}
+\hline
+\multicolumn{2}{c}{Input variables for categorization MVA}                                                                                                                   \\ \hline
+$Jet_{1}$ b-tag score              & The b-tag score of leading jet                                                                                                          \\
+$Jet_{2}$ b-tag score              & The b-tag score of trailing jet                                                                                                         \\
+${\PT}_{\gamma\gamma}/{\PT}_{HH}$      & \begin{tabular}[c]{@{}l@{}}The transverse momentum ratio between \\ di-photon and di-Higgs boson\end{tabular}                           \\
+${\PT}_{\gamma\gamma}/{\PT}_{bb}$      & \begin{tabular}[c]{@{}l@{}}The transverse momentum ratio between\\  di-photon and di-jet\end{tabular}                                   \\
+$|cos(\theta^{*}_{CS})|$           & \begin{tabular}[c]{@{}l@{}}The angle between the direction of the $\Hgg$ \\ candidate and the Colin-Sopper reference frame\end{tabular} \\
+$|cos(\theta^{*}_{bb})|$           & \begin{tabular}[c]{@{}l@{}}The angle between the direction of the $\Hbb$ \\ candidate and the leading jet\end{tabular}                  \\
+$|cos(\theta^{*}_{\gamma\gamma})|$ & \begin{tabular}[c]{@{}l@{}}The angle between the direction of the $\Hgg$ \\ candidate and the leading photon\end{tabular}               \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{The summary of the categorization by MVA. 
+The high signal purity category (HPC) and medium signal purity category (MPC) are defined for both non-resonant and resonant analyses}
+\label{tab:SummaryCat}
+\begin{tabular}{lll}
+\hline
+Analysis                      & Mass region                & Categorization MVA                     \\ \hline
+\multirow{4}{*}{Non-resonant} & \multirow{2}{*}{$\Mx>350$ GeV} & HPC: MVA \textgreater~ 0.97             \\
+                              &                            & MPC: 0.6 \textless~ MVA \textless~ 0.97  \\
+                              & \multirow{2}{*}{$\Mx<350$ GeV} & HPC: MVA \textgreater~ 0.985            \\
+                              &                            & MPC: 0.6 \textless~ MVA \textless~ 0.985 \\ \hline
+\multirow{4}{*}{Resonant}     & \multirow{2}{*}{$\Mx>600$ GeV} & HPC: MVA \textgreater~ 0.5              \\
+                              &                            & MPC: 0 \textless~ MVA \textless~ 0.5     \\
+                              & \multirow{2}{*}{$\Mx<600$ GeV} & HPC: MVA \textgreater~ 0.96             \\
+                              &                            & MPC: 0.7 \textless~ MVA \textless~ 0.96  \\ \hline
+\end{tabular}
+\end{table}

@@ -1,0 +1,315 @@
+\chapter{Event selection} % Main chapter title
+
+\label{Chapter4} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+\section{Datasets}
+
+\subsection{Data}
+The data used in this analysis are collected by the CMS in full 2016, corresponding to an integrated luminosity of 35.9 /fb recorded by the CMS detector.
+The ``DoubleEG'' dataset is used in this analysis, which is off-line reconstructed in 2017 and collects the events firing the specific di-electron/di-photon triggers. % ** need to be checked
+% The di-photon HLT trigger \\ \verb|HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90| 
+% is used in this analysis as the same used in $\Hgg$ study.~\cite{1804.02716}
+In this analysis, we use di-photon HLT trigger which is the same used in $\Hgg$ study.~\cite{1804.02716}
+This HLT is seeded by the hardware L1 trigger electromagnetic candidates.
+There should be a single candidate with transverse momentum higher than 25 GeV or a pair of candidates higher than 15 and 10 GeV respectively.
+The HLT algorithm extends the L1 candidates (L1 seed) from the rectangle by $\Delta \eta \times \Delta \phi = 0.14 \times 0.4$ to be clusters.
+There should exist the clusters passing the isolation plus calorimeter identification or $R_{9}$ selection, which is shown in Tab.~\ref{tab:HLT}.
+Furthermore, the events should contain two clusters within $|\eta|<2.5$ having $E_{T}>30$ GeV and $E_{T}>18$ GeV, $H/E < 0.12$ and invariant mass of two objects above 90 GeV.
+The rate of this HLT is 14 Hz during 2016 data taking.
+
+
+\begin{table}[h]
+\centering
+\caption{The list of filters used in di-photon high level trigger (HLT).}
+\label{tab:HLT}
+\begin{tabular}{|c|l|l|l|l|}
+\hline
+\multicolumn{1}{|l|}{}                                                            & \multicolumn{1}{c|}{$R_{9}$(5x5)} & \multicolumn{1}{c|}{$\sigma_{i\eta i\eta}$(5x5)} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}ECAL PF cluster\\ isolation\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Track\\ isolation\end{tabular}} \\ \hline
+\begin{tabular}[c]{@{}c@{}}Barrel region\\ $R_{9}$\textgreater{}0.85\end{tabular} & \textgreater 0.5                  & -                                                & -                                                                                        & -                                                                              \\ \hline
+\begin{tabular}[c]{@{}c@{}}Barrel region\\ $R_{9}\leq$0.85\end{tabular}           & \textgreater 0.5                  & \textless 0.015                                  & \textless 6.0 + 0.012$E_{T}$                                                             & \textless 6.0 + 0.002$E_{T}$                                                   \\ \hline
+\begin{tabular}[c]{@{}c@{}}Endcap region\\ $R_{9}$\textgreater{}0.90\end{tabular} & \textgreater 0.8                  & -                                                & -                                                                                        & -                                                                              \\ \hline
+\begin{tabular}[c]{@{}c@{}}Endcap region\\ $R_{9}\leq$0.90\end{tabular}           & \textgreater 0.8                  & \textless 0.035                                  & \textless 6.0 + 0.012$E_{T}$                                                             & \textless 6.0 + 0.002$E_{T}$                                                   \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Resonant Monte Carlo signal samples} \label{sec:ResonantMCsamples}
+
+The signal samples is simulated at leading order (LO) by \\{\textsc{MadGraph5}\_a\textsc{mc@nlo}\xspace} 2.3.2~\cite{1405.0301,1407.0281} interfaced with LHAPDF6~\cite{1412.7420}.
+The next-to-leading-order (NLO) parton distribution function set \\PDF4LHC15\_NLO\_MC~\cite{1504.06469,1510.03865,1506.07443,1412.3989,1410.8849} is used.
+The events are processed with {\textsc{Pythia 8.212}\xspace}~\cite{1410.3012} with the tune CUETP8M1~\cite{1512.00815} for showering, hadronization, underlying event and pile-up.
+The the CMS detector is simulated by {\textsc{Geant 4}\xspace}~\cite{Agostinelli2003}.
+The Warped Extra Dimension model in bulk RS scenario with narrow-width resonance is chosen as the benchmark model.
+The new heavy particles both spin-0 Radion and spin-2 Graviton with the resonance masses from 250 GeV to 900 GeV, which are produced through gluon-gluon fusion and decay into two Higgs bosons with the mass $m_{H}=125~$GeV, are simulated.
+The particles are assumed having narrow decay width which is much smaller than the detector resolution and negligible. % ** Rafael: width is 1 GeV, PAS and others: 1 MeV ??
+The used resonance mass points are summarized in Tab.~\ref{tab:HbbggSamples}.
+
+The cross-section for theoretical interpretation can be found at Ref.~\cite{WEDXSgithub}.
+The configuration cards of {\textsc{MadGraph5}\_a\textsc{mc@nlo}\xspace} can be found at Ref.~\cite{MadCard}.
+
+\begin{table}[h]
+\caption{The resonant signal samples used in this analysis. The label ``M-X'' indicates the resonant mass points.}
+\centering
+\begin{tabular}{ll}
+\hline
+Samples                                            & Number of events \\ \hline
+GluGluToRadionToHHTo2B2G\_M-250\_narrow\_13TeV       & 50000           \\
+GluGluToRadionToHHTo2B2G\_M-260\_narrow\_13TeV       & 50000           \\
+GluGluToRadionToHHTo2B2G\_M-270\_narrow\_13TeV       & 50000           \\
+GluGluToRadionToHHTo2B2G\_M-280\_narrow\_13TeV       & 49600           \\
+GluGluToRadionToHHTo2B2G\_M-300\_narrow\_13TeV       & 50000           \\
+GluGluToRadionToHHTo2B2G\_M-320\_narrow\_13TeV       & 49998           \\
+GluGluToRadionToHHTo2B2G\_M-340\_narrow\_13TeV       & 50000           \\
+GluGluToRadionToHHTo2B2G\_M-350\_narrow\_13TeV       & 49999           \\
+GluGluToRadionToHHTo2B2G\_M-400\_narrow\_13TeV       & 49996           \\
+GluGluToRadionToHHTo2B2G\_M-450\_narrow\_13TeV       & 49998            \\
+GluGluToRadionToHHTo2B2G\_M-500\_narrow\_13TeV       & 49997            \\
+GluGluToRadionToHHTo2B2G\_M-550\_narrow\_13TeV       & 49998            \\
+GluGluToRadionToHHTo2B2G\_M-600\_narrow\_13TeV       & 49998            \\
+GluGluToRadionToHHTo2B2G\_M-650\_narrow\_13TeV       & 49999            \\
+GluGluToRadionToHHTo2B2G\_M-700\_narrow\_13TeV       & 49198            \\
+GluGluToRadionToHHTo2B2G\_M-750\_narrow\_13TeV       & 49997            \\
+GluGluToRadionToHHTo2B2G\_M-800\_narrow\_13TeV       & 49792            \\
+GluGluToRadionToHHTo2B2G\_M-900\_narrow\_13TeV       & 49994            \\
+GluGluToBulkGravitonToHHTo2B2G\_M-250\_narrow\_13TeV & 49799           \\
+GluGluToBulkGravitonToHHTo2B2G\_M-260\_narrow\_13TeV & 49998           \\
+GluGluToBulkGravitonToHHTo2B2G\_M-270\_narrow\_13TeV & 48400           \\
+GluGluToBulkGravitonToHHTo2B2G\_M-280\_narrow\_13TeV & 50000           \\
+GluGluToBulkGravitonToHHTo2B2G\_M-300\_narrow\_13TeV & 49200           \\
+GluGluToBulkGravitonToHHTo2B2G\_M-320\_narrow\_13TeV & 50000           \\
+GluGluToBulkGravitonToHHTo2B2G\_M-340\_narrow\_13TeV & 49998           \\
+GluGluToBulkGravitonToHHTo2B2G\_M-350\_narrow\_13TeV & 50000           \\
+GluGluToBulkGravitonToHHTo2B2G\_M-400\_narrow\_13TeV & 49999           \\
+GluGluToBulkGravitonToHHTo2B2G\_M-450\_narrow\_13TeV & 49999            \\
+GluGluToBulkGravitonToHHTo2B2G\_M-500\_narrow\_13TeV & 49198            \\
+GluGluToBulkGravitonToHHTo2B2G\_M-550\_narrow\_13TeV & 49995            \\
+GluGluToBulkGravitonToHHTo2B2G\_M-600\_narrow\_13TeV & 49998            \\
+GluGluToBulkGravitonToHHTo2B2G\_M-650\_narrow\_13TeV & 50000            \\
+GluGluToBulkGravitonToHHTo2B2G\_M-700\_narrow\_13TeV & 49998            \\
+GluGluToBulkGravitonToHHTo2B2G\_M-750\_narrow\_13TeV & 49999            \\
+GluGluToBulkGravitonToHHTo2B2G\_M-800\_narrow\_13TeV & 49999            \\
+GluGluToBulkGravitonToHHTo2B2G\_M-900\_narrow\_13TeV & 49993            \\ \hline
+\end{tabular}
+\label{tab:HbbggSamples}
+\end{table}
+
+\clearpage
+
+\subsection{Non-resonant Monte Carlo signal samples} \label{sec:NonResonantMCsamples}
+
+The MC generator set used for non-resonance analysis is the same as the resonance signal MC samples.
+Both SM-like HH production and BSM HH production through gluon-gluon fusion are simulated based on the effective field theory (EFT) Lagrangian, which contains five parameters related to the Higgs boson coupling strength and is already described in Sec.~\ref{sec:nonResTheory}.
+It is not feasible to generate the simulation samples with all possible combination of the five parameters.
+The mentioned shape benchmark technique is used to produce MC samples.
+The events which are simulated by different value of parameters and have similar shape of kinematics distribution are grouped into a cluster.
+The benchmark points represent these clusters to reduce the complexity of the analysis.
+The first version of recommended 13 benchmark points are used to generate our signal samples.
+They are listed in Tab.~\ref{tab:NonResSamples}, contain the SM-like, box-diagram only and other BSM values.
+The configuration cards of {\textsc{MadGraph5}\_a\textsc{mc@nlo}\xspace} can also be found at Ref.~\cite{MadCard}.
+
+To explore the phase space beyond the simulated benchmark points, the event weighting technique is employed to approach other points.~\cite{1710.08261}
+It starts from the assumption that the HH production is a 2 $\rightarrow$ 2 scattering.
+The two Higgs bosons are produced back-to-back in the azimuthal direction and have the same momentum.
+The azimuthal angle of the two Higgs boson is isotropic.
+Consequently, the kinematics can just be determined by two variables: invariant mass of Higgs boson pair $m_{HH}$ and the absolute value of the cosine of the polar angle of one Higgs boson with respect to the beam axis $|cos \theta^{*}|$.
+The phase space in these two variables is sliced optimally into 59 bins in $m_{hh}$ and 4 bins in $|cos \theta^{*}|$.
+
+The event weights are derived from the differential cross-section of each bin, which is extended from the total cross-section described in Ch.~\ref{Chapter1}, Eq.~\ref{eq:EffectiveXS}.
+It has the same form of Eq.~\ref{eq:EffectiveXS} with coefficients ${A}_{i}^{j}$ in different bin $j$.
+The differential cross-section becomes
+\begin{equation} \label{eq:DiffXS}
+  \begin{aligned}
+	R_{HH}^{j}=\frac{\sigma_{HH}}{\sigma^{SM}_{HH}} \frac{Frac^{j}}{Frac^{j}_{SM}}=Poly({A}_{i}^{j}).
+  \end{aligned}
+\end{equation}
+The $Frac^{j}$ is the fraction of events of the simulated BSM samples in bin $j$, and $Frac^{j}_{SM}$ is for the simulated sample of SM-like HH production.
+The coefficients ${A}^{j}$ are extracted by the likelihood fit and scanning the space of the five parameters.
+This procedure is similar to the procedure to extract the total cross-section coefficients.
+To obtain the events of the arbitrary point in the space of five parameters, the all simulated events are summed together.
+The events in bin $j$ are applied the weight:
+\begin{equation} \label{eq:ReWeight}
+  \begin{aligned}
+	W_{j}=R_{HH}^{j} \frac{\sigma^{SM}_{HH}}{\sigma_{HH}} \frac{Frac^{j}_{SM}}{C_{norm}} ,  % ** need to check from the source code!
+  \end{aligned}
+\end{equation}
+where $C_{norm} = \sum\limits_{j}~R_{HH}^{j}~\frac{\sigma^{SM}_{HH}}{\sigma_{HH}}~{Frac}^{j}_{SM}$ is the factor to limit the errors from the fit and simulated samples. In the ideal case, $C_{norm}$ is equal to one.
+
+Fig.~\ref{fig:ReweightValidate} shows the comparison in different kinematics variables between two SM-like sample, one is from MC simulation and the other one is from re-weighting.
+The good agreement is observed.
+
+\begin{table}[h]
+\centering
+\caption{The list of non-resonant signal samples and the values of five parameters in 13 clusters. The box-diagram only sample is also produced.}
+\label{tab:NonResSamples}
+\begin{tabular}{ccccccc}
+\hline
+Samples    & \begin{tabular}[c]{@{}c@{}}Number \\ of events\end{tabular} & $\kappa_{\lambda}$ & $\kappa_{t}$ & $c_{2}$ & $c_{g}$ & $c_{2g}$ \\ \hline
+Node1 (SM) & 49998                                                       & 1.0                & 1.0          & 0.0     & 0.0     & 0.0      \\
+Node2      & 49598                                                       & 7.5                & 2.5          & -0.5    & 0.0     & 0.0      \\
+Node3      & 50000                                                       & 15.0               & 1.5          & -3.0    & -0.0816 & 0.3010   \\
+Node4      & 49996                                                       & 5.0                & 2.25         & 3.0     & 0.0     & 0.0      \\
+Node5      & 49999                                                       & 10.0               & 1.5          & -1.0    & -0.0956 & 0.1240   \\
+Node6      & 49998                                                       & 1.0                & 0.5          & 4.0     & -1.0    & -0.3780  \\
+Node7      & 49998                                                       & 2.4                & 1.25         & 2.0     & -0.2560 & -0.1480  \\
+Node8      & 49998                                                       & 7.5                & 2.0          & 0.5     & 0.0     & 0.0      \\
+Node9      & 49600                                                       & 10.0               & 2.25         & 2.0     & -0.2130 & -0.0893  \\
+Node10     & 49799                                                       & 15.0               & 0.5          & 1.0     & -0.0743 & -0.0668  \\
+Node11     & 49998                                                            & -15.0              & 2.0          & 6.0     & -0.1680 & -0.5180  \\
+Node12     & 49996                                                       & 2.4                & 2.25         & 2.0     & -0.0616 & -0.1200  \\
+Node13     & 49997                                                       & -15.0              & 1.25         & 6.0     & -0.0467 & -0.5150  \\ \hline
+NodeBox    & 49999                                                       & 0.0                & 1.0          & 0.0     & 0.0     & 0.0      \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.95\textwidth]{Figures/Chapter4/ReweightValidate}
+  \caption{The comparison between SM-like simulated and re-weighting samples in three kinematics variables: the four body invariant mass, the angle between two Higgs bosons and the four body transverse momentum.~\cite{1710.08261}}
+  \label{fig:ReweightValidate}
+\end{figure}
+
+\subsection{Background simulation} \label{sec:BkgMC}
+
+The background is contributed mainly by n$\gamma$ + jets events in the phase space of our analysis.
+They mainly come from the non-resonance QCD production of two photons and two jets.
+Meanwhile, the jets misidentified as photons with multi-jets and other photons can be a source.
+It is challenging to simulate the QCD events accurately due to large effects in high order.~\cite{1706.08309}
+In this analysis, these contributions are estimated from the data.
+
+On the other hand, the contribution of single Higgs production in \\ non-resonance search is not negligible.
+The SM-like single Higgs boson production with two additional jets, where the Higgs boson decays into two photons, through gluon-gluon fusion (ggH), vector boson fusion (VBF H) and associated production with $t\bar{t}$ ($t\bar{t}$H), $b\bar{b}$ ($b\bar{b}$H), and vector boson (VH) is considered as a source of background.
+They are simulated by {\textsc{MadGraph5}\_a\textsc{mc@nlo}\xspace} 2.2.2 for VH, 2.3.3 for $b\bar{b}$H, and {\textsc{powheg} 2.0}~\cite{hep-ph/0409146,0709.2092,1002.2581,1111.2854} at NLO for ggH, VBF H and $t\bar{t}$H.
+They are also interfaced with {\textsc{Pythia 8.212}\xspace} and {\textsc{Geant 4}\xspace} as the signal samples.
+
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+\section{Physical objects}
+
+All of the final-state physics objects are reconstructed by the particle flow algorithm.~\cite{1706.04965}
+This algorithm links all of the reconstructed ingredients together from the sub-detectors in the CMS and identify the particle type.
+Each reconstructed object is mutually exclusion, where the ingredients are only used once for one objects.
+The identification is benefited by the structure of the CMS detector, as shown in Fig.~\ref{fig:CMSPFsket}.
+Starting from the interaction region, the charged particles is detected by the tracker first.
+The electromagnetic particles are absorbed by the ECAL, and the hadronic particles are obstructed by the HCAL.
+Finally, the escaping muons cause the hit in the muon system.
+The particles can be identified according to the linked hits in each sub-detector.
+The correlations between each sub-detector are taken into account to identify the properties of particles.
+
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Figures/Chapter4/CMS-PRF-14-001_Figure_001}
+  \caption{A sketch of the specific particle interactions in a transverse slice of the CMS detector.~\cite{1706.04965}}
+  \label{fig:CMSPFsket}
+\end{figure}
+
+\subsection{The $\Hgg$ candidate}
+
+\subsubsection{Trigger mimic pre-selection}
+
+To achieve a good agreement between data and simulation, a pre-selection which is tighter than the trigger selection is applied in order to mimic the trigger.
+This pre-selection is developed for the \Hgg search~\cite{1804.02716} and is employed in \HHbbgg analysis.
+The scale factors and uncertainties related to this selection are also applied in this analysis.
+The selection is summarized in Tab.~\ref{tab:HLTmimic}.
+
+\begin{table}[h]
+\centering
+\caption{The trigger mimic selection for the photon trigger.}
+\label{tab:HLTmimic}
+\begin{tabular}{|c|c|c|}
+\hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Barrel region\\ $|\eta|<1.4442$\end{tabular}}    & $R_{9}$(5x5)\textgreater{}0.85 & -                                                                                                                                              \\ \cline{2-3} 
+                                                                                            & $R_{9}$(5x5)$\leq$0.85         & \begin{tabular}[c]{@{}c@{}}$R_{9}$(5x5)\textgreater{}0.5\\ pfPhoIso \textless 4 GeV\\ $\sigma_{i\eta i\eta}$(5x5)\textless{}0.015\end{tabular} \\ \hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Endcap region\\ $1.556<|\eta|<2.5$\end{tabular}} & $R_{9}$(5x5)\textgreater{}0.9  & -                                                                                                                                              \\ \cline{2-3} 
+                                                                                            & $R_{9}$(5x5)$\leq$ 0.9         & \begin{tabular}[c]{@{}c@{}}$R_{9}$(5x5)\textgreater{}0.8\\ pfPhoIso \textless 4 GeV\\ $\sigma_{i\eta i\eta}$(5x5)\textless{}0.035\end{tabular} \\ \hline
+\multicolumn{3}{|l|}{\begin{tabular}[c]{@{}l@{}}Pass electron-veto to reject the electron;\\ $R_{9}$(5x5) \textgreater 0.8 or chargeIso \textless{}20 GeV or chargeIso/$E_{T}$ \textless 0.3;\\ H/E \textless 0.08;\end{tabular}}                                             \\ \hline
+\end{tabular}
+\end{table}
+
+\subsubsection{$\Hgg$ selection}\label{ssec:photonselection}
+% need to maintion control region for categorization MVA training
+
+The photon pair selection is based on the kinematics variables and the photon MVA identification which is described in Sec~\ref{sec:phoID}.
+The selection is as follows:
+\begin{itemize}
+\item Leading photon divided by the di-photon invariant mass $p^{\gamma 1}_{T}/M_{\gamma\gamma}>1/3$, trailing photon $p^{\gamma 2}_{T}/M_{\gamma\gamma}>1/4$;
+\item $100 < M_{\gamma\gamma} < 180$ GeV;
+\item Both photons pass photon MVA identification with 90 \% efficiency working point;
+\end{itemize}
+The trigger efficiency of the events passing the selection above is 100 \%.
+
+In addition, the control region is obtained by selecting the photon pair with only one photon passing the photon MVA identification.
+The other procedures of selection are the same as the normal selection.
+This control region is used by the training of categorization MVA, which is described in Sec.~\ref{sec:catMVA}, and also the background modeling validation, which is mentioned in Sec.~\ref{sec:biasstudy}.
+
+\subsection{The $\Hbb$ candidate}
+
+The jets in LHC Run-II at CMS are reconstructed by clustering the particle-flow objects with the anti-$k_{t}$ algorithm using cone size $\Delta R = 0.4$.~\cite{1126-6708-2008-04-063}
+The cone size is smaller than LHC Run I analysis, which is $\Delta R = 0.5$, due to the higher luminosity and number of pile-up.
+This change leads jets to be worse resolution, because there is less energy clustered.
+The energy of jets are corrected by the flavor blind standard regression.~\cite{1107.4277} % ** this reference is for Run I, so old :(
+In addition, the specific energy regression for b-jet is applied, which is described in Sec.~\ref{sec:breg}.
+The jets are selected by the criteria as follows:
+\begin{itemize}
+\item Pass loose particle flow jet identification~\cite{CMS-PAS-JME-16-003};
+\item $\pT>25$ GeV;
+\item $|\eta|<2.4$, which is within the tracker of the CMS and can be tagged as b-jet;
+\item Outside the cone of selected photons with $ \Delta R(jet,\gamma) > 0.4$;
+\item $70 < M_{jj} <90$;
+\item The jet pair which has the highest sum of b-tag score is selected.
+\end{itemize}
+
+
+\subsection{The di-Higgs system} \label{ssec:diHiggsSelection}
+% decribe Mx and mass window selection
+
+After the di-photon and di-jet selection, the selected objects are combined to become a di-Higgs boson candidate.
+To minimize the dependence on the resolution of photons and jets, the effective four body invariant mass~\cite{1404.0996} is defined as:
+\begin{equation} \label{eq:MxDef}
+  \begin{aligned}
+	\Mx=M_{jj\gamma\gamma}-M_{jj}-M{\gamma\gamma}+250~GeV.
+  \end{aligned}
+\end{equation}
+
+This variable scales the di-photon and di-jet invariant mass to 125 GeV.
+Fig.~\ref{fig:MxDistr} shows the comparison between the distributions of the four body invariant mass and the effective mass \Mx.
+The impact on the low mass resonance is very huge.
+% For the high mass resonance, the improvement is little since the resolution is much better originally.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Figures/Chapter4/MxDistr_new}
+  \caption{Comparison between \Mx (red) and $m_{jj\gamma\gamma}$ (purple) distribution of spin-2 resonance with different masses.
+  All of events pass the di-photon and di-jet selections.}
+  \label{fig:MxDistr}
+\end{figure}
+
+The \Mx is used to restrict the signal phase space for the signal modeling in the resonance analysis.
+The size of effective mass window around \Mx peak is optimized to reach the best sensitivity for each of searched resonance point.
+The mass window is chosen to cover 60 \% signal shape in \Mx with the minimum range.
+The exactly mass window range is a function of the resonance mass, which is fit by the polynomial and shown in Fig.~\ref{fig:MxWindows}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter4/MxWindows}
+  \caption{The upper bounds and lower bounds of the window in \Mx as a function of searched resonance mass.
+  The values of bound are fit by a 3rd polynomial.}
+  \label{fig:MxWindows}
+\end{figure}
+
+\subsection{Signal selection efficiency}
+
+The signal step-by-step selection acceptance times efficiency as a function of resonance mass is shown in Fig.~\ref{fig:effPlot}, which includes the online (trigger mimic) selection, the di-photon selection, the di-jet selection and the MVA categorization in different regions.
+The final efficiencies range from approximately 20\% (low mass) to 50\% (high mass) for both spin-0 and spin-2 hypotheses.
+In the non-resonance case, the efficiency is 30\% for the SM-like HH production, with 25\% in the high mass region and 5\% in the low mass region.
+
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.9\textwidth]{Figures/Chapter4/effPlot}
+  \caption{Consecutive selection efficiencies step-by-step for two resonance hypotheses: spin-0 (left) and spin-2 (right).}
+  \label{fig:effPlot}
+\end{figure}

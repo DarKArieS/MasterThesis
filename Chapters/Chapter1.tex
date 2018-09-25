@@ -1,0 +1,515 @@
+\chapter{Introduction} % Main chapter title
+
+\label{Chapter1} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+
+\section{Introduction}
+
+The discovery of new boson with mass around 125 GeV at the Large Hadron Collider (LHC) by the CMS~\cite{1207.7235} and ATLAS~\cite{1207.7214} opened a new era of particle physics.
+The measured properties of this new particle are consistent with the Higgs boson in the Standard Model within the uncertainties.~\cite{1606.02266}
+In the Standard Model (SM), the Higgs mechanism involves Higgs potential field to solve the mass problem of the gauge bosons and the fermions. % ** need to be fixed!
+% There are two free parameters to describe the Higgs potential: mass of Higgs boson and its self-coupling constant. 
+With the determined Higgs mass value, the structure of the Higgs potential field and the Higgs self-couplings are predicted in the SM.
+To confirm independently whether the new boson is Higgs boson in the SM, the measurement of the self-coupling constant is required.
+In LHC experiment, the double Higgs production is the only possible probe of the self-coupling constant.
+The di-Higgs production is mainly via gluon-gluon fusion in proton-proton collisions, which is a rare process.
+The cross section predicted by the LHC Higgs Cross Section Group is about 33.49 $fb$~\cite{1610.07922} in 13 TeV pp collisions, which is not expected to be sensitive at LHC.
+Nevertheless, there are many theories beyond the Standard Model (BSM) predicting other processes, which may increase the cross section of the di-Higgs boson production.
+Several BSM models extend the Standard Model, such as the Higgs singlet model, the two-Higgs-doublet model (2HDM), the minimal supersymmetric standard model (MSSM) and the warped extra dimension (WED) theory.
+They predict that there are new heavy particles, which mass can be up to TeV scale, decaying into a pair of Higgs bosons.
+Although new physics may not be observable in the low energy region, the effect of the BSMs in low energy scale can be parameterized as several anomalous couplings by the effective field theory (EFT).
+Both kinds of resonance and non-resonance production are presented in this thesis.
+
+% The Higgs self-coupling and the top quark Yukawa coupling in the SM can be modified to other values.
+% In addition, three anomalous couplings beyond the SM are included: the interactions of a top quark pair with a Higgs boson pair, of a gluon pair with a Higgs boson pair, and of a gluon pair with a single Higgs boson.
+
+% Previous searches for di-Higgs production have been performed by both the ATLAS and CMS collaboration, details are shown in Sec.~\ref{sec:PreviousResult}.
+
+The search for the diHiggs production in this thesis explores the decay channel where one Higgs decays to a pair of b quarks and one decays to a pair of photons.
+The data are collected by the CMS detector in full 2016, which corresponds to an integrated luminosity of 35.9 $fb^{-1}$.
+
+This thesis is organized as follows:
+The motivation and the theoretical overview are described briefly in this chapter.
+In Chapter~\ref{Chapter2}, an overview of the LHC and the CMS detector is presented.
+Chapter~\ref{Chapter3} describes the MVA techniques used in this analysis.
+Chapter~\ref{Chapter4} mentions the dataset and the event selection.
+In Chapter~\ref{Chapter5}, the modeling for the signal and background estimation is introduced.
+The results are presented in Chapter~\ref{Chapter6}, both for the resonant and non-resonant processes.
+
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+
+\section{Theoretical overview}
+
+\subsection{Higgs mechanism}
+
+The Higgs mechanism was published in 1964 independently by Robert Brout and François Englert~\cite{Englert1964}, by Peter Higgs~\cite{Higgs1964}, and by Gerald Guralnik, C. R. Hagen, and Tom Kibble~\cite{Guralnik1964}.
+The concept of the Higgs mechanism is based on spontaneous symmetry breaking.
+The phenomenon of spontaneous symmetry breaking often happens in Nature.
+For example, a ball locates at the top of the dome and then rolls down in a specific direction.
+The rotational symmetry of this system was broken after rolling.
+
+The Higgs potential is involved and assumed to be
+\begin{equation} \label{eq:HiggsPotential}
+  \begin{aligned}
+	V(\phi) = \mu^{2}\phi^{*}\phi + \lambda(\phi^{*}\phi)^{2},
+  \end{aligned}
+\end{equation}
+where $\phi$ is the complex scalar field (particle) which interacts with the potential.
+The corresponding Lagrangian density can be written as
+\begin{equation} \label{eq:HiggsL}
+  \begin{aligned}
+	\mathcal{L} = (\partial_{\mu}\phi)^{*}(\partial^{\mu}\phi)-\mu^{2}\phi^{*}\phi-\lambda(\phi^{*}\phi)^{2}.
+  \end{aligned}
+\end{equation}
+The vacuum state should be the lowest potential energy state.
+To have a finite minimum, the parameter $\lambda$ should be positive.
+The parameter $\mu^{2}$ is required being negative to form a symmetry minimum ring, like Fig~\ref{fig:HiggsPotential}.
+\begin{figure*}[h]
+  \centering
+  \includegraphics[width=0.45\textwidth]{Figures/Chapter1/HiggsPotential}
+  \caption{The structure of the Higgs potential for a complex scalar field $\phi = \phi_{1}+i\phi_{2}$.~\cite{Thomson:2013zua}}
+  \label{fig:HiggsPotential}
+\end{figure*}
+The physical vacuum state will be at a particular point of the minimum potential ring, which breaks the global U(1) symmetry.
+% , denoted as $\phi^{2}=\nu^{2}=\frac{-\mu^{2}}{\lambda}$,
+
+In the Salam-Weinberg model, the Higgs mechanism is embedded to the $U(1)_{Y}\times SU(2)_{L}$ local gauge symmetry of electroweak sector.
+The electroweak scalar field should be a complex doublet, which contains one neutral field $\phi^{0}$ and one charged field $\phi^{+}$.
+\begin{equation} \label{eq:EWfield}
+  \phi=\frac{1}{\sqrt{2}}
+  \begin{pmatrix}
+	\phi^{+} \\
+	\phi^{0}
+  \end{pmatrix}=\frac{1}{\sqrt{2}}
+  \begin{pmatrix}
+	\phi_{1}+i\phi_{2} \\
+	\phi_{3}+i\phi_{4}
+  \end{pmatrix}.
+\end{equation}
+According to the structure of the potential, the vacuum state with lowest potential satisfies
+\begin{equation} \label{eq:EWfieldConstraint}
+  \begin{aligned}
+	\phi^{*}\phi=\frac{\upsilon^{2}}{2}=-\frac{\mu^{2}}{2\lambda},
+  \end{aligned}
+\end{equation}
+where $\upsilon$ is the vacuum expectation value.
+The vacuum expectation value $\upsilon$ should not be zero to remain photon to be massless. The constraint is
+\begin{equation} \label{eq:EWfieldPhotonConstraint}
+  \begin{aligned}
+	% \Bra{0}\phi \Ket{0}=\frac{1}{\sqrt{2}}
+	% \begin{pmatrix}
+	% 0 \\ \nu
+	% \end{pmatrix}
+	|\Bra{0}\phi^{0} \Ket{0}|=\frac{\upsilon}{\sqrt{2}}.
+  \end{aligned}
+\end{equation}
+% After the ground state is chosen, the excited state of the field (particle) can be obtained from perturbation about the minimum.
+Once the particular ground state is chosen, the symmetry is broken.
+The excited state of the field (particle) can be obtained from the perturbation of the vacuum state by introducing a real field $\eta(x)$.
+\begin{equation} \label{eq:EWPerField}
+  \phi = \frac{1}{\sqrt{2}}
+  \begin{pmatrix}
+	\phi_{1}+i\phi_{2} \\
+	\upsilon+\eta(x)+i\phi_{4}
+  \end{pmatrix}
+\end{equation}
+According to the Goldstone theorem, this field contains one massive scalar field and three massless Goldstone bosons.
+These three Goldstone fields can be absorbed by doing appropriate gauge transformation with a local phase.
+The field can be rewritten:
+\begin{equation} \label{eq:EWPerFieldNoGS}
+  \phi = \frac{1}{\sqrt{2}}
+  \begin{pmatrix}
+	0 \\
+	\upsilon+h(x)
+  \end{pmatrix},
+\end{equation}
+where Higgs field $h(x)$ is introduced.
+To respect Eq.~\ref{eq:HiggsL} to be $SU(2)_{L}\times U(1)_{Y}$ local symmetry, the derivatives are replaced by the covariant derivative with two gauge fields $\textbf{W}$ and $\textbf{B}$:
+\begin{equation} \label{eq:EWCovariant}
+  \partial_{\mu} \rightarrow D_{\mu}=\partial_{\mu}+\frac{1}{2}ig_{W}\sigma^i \cdot \textbf{W}_{\mu}^i + ig'\frac{Y}{2}\textbf{B}_{\mu},
+\end{equation}
+where $\sigma^i$ with $(i=1,2,3)$ are the three generators of SU(2) symmetry and the weak hypercharge $Y=2(Q-I_{w}^{(3)})=2(0-(-\frac{1}{2}))=1$.
+Combines Eq.~\ref{eq:HiggsL}, Eq.~\ref{eq:EWPerFieldNoGS} and Eq.~\ref{eq:EWCovariant}, the three massive gauge bosons and also one massless boson (photon) are determined by the terms of $(D_{\mu}\phi)^{*}(D^{\mu}\phi)$ in the Lagrangian.
+The masses of gauge bosons are found to be
+\begin{equation} \label{eq:GaugeMass}
+  \begin{aligned}
+	m_{W}=\frac{1}{2}g_{W}\upsilon , \quad m_{Z}=\frac{1}{2}\upsilon\sqrt{g_{W}^{2}+g'^{2}}, \quad m_{h}=\sqrt{2\lambda}\upsilon .
+  \end{aligned}
+\end{equation}
+By the measurement of $m_{W}$ and $g_{W}$, the vacuum expectation value is found to be $\upsilon$ = 246 GeV.
+
+The Lagrangian also describes the couplings between Higgs field and weak bosons, which include hWW, hZZ, hhWW, hhZZ, hhh and hhhh.
+The Higgs-self coupling can be described by the terms of the Higgs potential:
+\begin{equation} \label{eq:HiggsCouplingTerms}
+  \begin{aligned}
+	V(h)=\frac{1}{2}m_{h}^{2}h^{2}+\lambda\upsilon h^{3}+\frac{\lambda}{4} h^{4}, %-\frac{\lambda}{4}\nu^{4},
+  \end{aligned}
+\end{equation}
+where the trilinear self-coupling constant is $\lambda_{hhh}=\lambda \upsilon=\frac{m_{h}^2}{2\upsilon}$ and also the quadrilinear self-coupling constant is $\lambda_{hhhh}=\frac{\lambda}{4}=\frac{m_{h}^2}{8\upsilon^{2}}$, which can be predicted by the measurement of Higgs boson mass $m_{h}$.
+
+For fermions, the left-handed chiral fermions are described by SU(2) doublets and right-handed fermions are described by SU(2) singlets.
+The familiar process can be done to derive the fermion masses through the Yukawa coupling Lagrangian and the Higgs doublet.
+
+Although the Higgs mass is already measured as about 125 GeV, the direct measurement of the self-coupling is necessary to provide an independent validation.
+The cross-section of the Higgs boson pair production and the triple Higgs boson production are known as the possible probes of the coupling constant.
+% The triple Higgs boson production depends strongly on the coupling constants, shown in Fig.~.
+The triple Higgs boson production associated to the quadrilinear self-coupling is highly suppressed by $\upsilon^{2}$.
+The possible triple Higgs boson production processes are shown in Fig.~\ref{fig:TrippleHiggs}, which are too complicated to explore in the experiment.
+The total cross section is in the order of 0.1 $fb$, which is too rare to search in the experiment in a foreseen future.~\cite{1408.6542}
+Therefore, the possible way to measure the Higgs self-coupling in experiment is through the Higgs boson pair production.
+In proton-proton collisions, it is mainly via gluon-gluon fusion, as Fig.~\ref{fig:HHXS} shown.~\cite{1212.5581,1401.7340}
+There are two processes in the same order of magnitude, shown in Fig~\ref{fig:HHFey}.
+One involves the trilinear Higgs boson self-coupling corresponding to $\lambda_{hhh}$.
+Another involves a heavy quark loop corresponding to the top quark Yukawa coupling $y_{t} = \sqrt{2}m_{t}/\upsilon$, which is called box diagram.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{Figures/Chapter1/TrippleHiggs.png}
+  \caption{The Feynman diagrams of triple Higgs boson production via gluon-gluon fusion. From left to right: production through pentagon top loop, rectangle top loop with subsequent decay through trilinear self-coupling, triangle top loop with subsequent decay through two trilinear self-coupling and triangle top loop with one quartic self-coupling.}
+  \label{fig:TrippleHiggs}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Figures/Chapter1/HHFey.png}
+  \caption{The Feynman diagrams of Higgs boson pair production. }
+  \label{fig:HHFey}
+\end{figure}
+Because these two diagrams are interfered destructively in leading oder, the cross-section of the pair production becomes small.
+The cross section predicted by the LHC Higgs Cross Section Group is about 33.49 $fb$~\cite{1610.07922} in 13 TeV pp collisions, which is not sensitive at the LHC.
+However, it can be a probe of BSM physics.
+Several phenomena in Nature implicit that the SM is incomplete. For example, the SM doesn't include the gravity.
+The BSM physics associated Higgs pair production may increase the cross-section.
+In next section, two types of BSMs are introduced.
+
+% which are described in~\cite{1212.5581,1401.7340}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter1/HHXS.png}
+  \caption{The cross-section of Higgs pair production through gluon-gluon fusion (black), vector boson fusion (red), and the pair production associated with top quark pair (green), vector boson (blue and yellow) and single top quark (purple).~\cite{1401.7340}}
+  \label{fig:HHXS}
+\end{figure}
+
+\subsection{Resonant pair production}
+
+There are many models extending the SM and predicting that the new particles exist and can decay into a pair of Higgs bosons.
+For example, the Higgs singlet model involves a Higgs singlet field and mixes it with the original Higgs doublet.
+% The mechanism is familiar to the electroweak process and
+It predicts that there are a light SM-like Higgs boson $h$ and a heavy Higgs boson $H$, which can couple to each other.
+Other extensions, such as two Higgs doublet model (2DHM) and minimal supersymmetric model (MSSM), involve two Higgs doublet fields and predict the existence of five new particles: two heavy charged Higgs bosons $H^{\pm}$, one heavy neutral Higgs bosons $H$, one pseudoscalar boson $A$ and one light SM-like Higgs boson $h$.
+
+On the other hand, models with extra dimension are developed to solve the problem of gravity.
+In the 1920's, the theory built by Kaluza and Klein involves the compact 5th spacetime dimension, which can be compactified as a circle, and try to unify the electroweak force and gravity force.
+Moreover, other theories try to explain the hierarchy problem between electroweak scale and the Planck scale.~\cite{hep-ph/9803315}
+These theories allow the compact 5-D space to be large. The new hierarchy problem about the compactification scale comes.
+To solve new hierarchy problem, the model proposed by Randall and Sundrum (RS model) introduces the concept of warped extra dimension (WED).~\cite{hep-ph/9905221}
+They consider that there are two 3-branes (three dimensional space with time), one allows SM field to propagate through (weak brane) and another is for gravity force (graviton brane).
+The metric of the 5-D spacetime is described as a 4-D spacetime multiplied by a "warp" factor and is referred to as the solution to 5-D Einstein’s equations:
+\begin{equation} \label{eq:WarpedMetric}
+  \begin{aligned}
+	ds^{2}=e^{-2kr_{c}\phi}\eta_{\mu\nu}dx^{\mu}dx^{\nu}+r_{c}^{2}d\phi^{2},
+  \end{aligned}
+\end{equation}
+where $r_{c}$ is the compactification radius, $k$ is the curvature to control the warped factor $e^{-2kr_{c}}$ and $\phi$ is the 5th warped dimension.
+To solve the Einstein’s equation, the value of $k$ is equal to $\sqrt{\frac{-\Lambda}{24M^{3}}}$, where $\Lambda$ is the cosmological constant, which is also treated as vacuum energy density, and $M$ is the Planck mass in 5-D dimension.
+% The warped dimension is described as a line which links two 3-branes, as Fig.~\ref{fig:WEDbranes}~\cite{1404.0102} shown.
+The $5^{th}$ dimension is constraint as a circle, which links two 3-branes (3-D space and time).
+The gravity brane is located at $\phi=0$ and the weak brane is located at $\phi=\pi$, as Fig.~\ref{fig:WEDbranes}~\cite{1404.0102} shown.
+The interval between two branes is called "bulk".
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter1/WEDbranes.png}
+  \caption{Scheme of dimensions on RS theory. The extra dimension $\phi$ compactified on the interval (0, $\pi$) links two branes. The probability function is exponential decay curve.}
+  \label{fig:WEDbranes}
+\end{figure}
+The two new particles are coming from the fluctuations of the 5-D metric, which are the excited fields of the metric.
+The tensor fluctuation from the original 4-D parts in the metric Eq.~\ref{eq:WarpedMetric} generates the 4D effective massive particle, which is called Graviton.
+On the other hand, the scalar fluctuation of the $5^{th}$ dimension predicts so-called Radion.
+To explore the different phase space of kinematics, these two particles are assumed arbitrarily that radion is spin-0 and graviton is spin-2.
+The angular distribution of spin-0 is distinct from the spin-2 particles by different kinematics.
+There are two scenarios of the RS model. 
+One is that the SM fields only can propagate on the weak brane (RS1 model), another is that the SM fields can propagate in the bulk (bulk RS model).
+In the latter case, the coupling strength between gravity and the SM fields depends on the position in the bulk of the SM fields, which gives us more interesting phenomenology.
+For example, the light quarks can be localized closely to the Planck brane, while the top quark is near the weak brane and has a large mass.~\cite{hep-ph/0701150}
+The properties of radion are similar in these two scenarios.
+It can be parameterized $\Lambda_{R}=\sqrt{6}e^{-\pi k r_{c}}k\sqrt{\frac{M_{5}^{3}}{k^{3}}}$ for radion. %$\Lambda_{R}=\sqrt{6}e^{-\pi k r_{c}}k\sqrt{\frac{M_{5}^{3}}{k^{3}}}$
+The properties of bulk graviton can be parameterized by the curvature $\widetilde{k}=k/\overline{M}_{Pl}$, where $\overline{M}_{Pl}=M_{Pl}/\sqrt{8\pi}$.
+The Planck mass here is the effective 4-D Planck mass obtained by multiplying the volume of the compact space, which becomes $M_{Pl}^{2}=M_{4+n}^{n+2}V_{n}$, where $n=1$ is the number of the extra dimension and $M_{4+n}$ is the (4+n)-D Planck mass.
+In this thesis, the theoretical interpretation is based on the bulk scenario and described in Ref.~\cite{1404.0102} and Ref.~\cite{WEDXSgithub}. The details of setup are shown in Sec.~\ref{sec:ResonantMCsamples}.
+
+\subsection{Non-resonance pair production}\label{sec:nonResTheory}
+
+The value of $\lambda_{hhh}$ is already predicted by the SM once the mass of Higgs bosons $m_{h}$ and vacuum expectation value $\nu$ are measured.
+However, $\lambda_{hhh}$ can be modified by considering the effect of the BSM physics.~\cite{1401.0935}
+In some BSM models, the mass of new particles can reach several TeVs and hard to achieve.
+Their effects in the low energy scale are possible to influence the contribution of di-Higgs boson production, which become the indirect way to study BSMs.
+For example, the effect on the di-Higgs production can be parameterized and described as the deviation from the SM prediction, which is defined as $\kappa_{\lambda}=\lambda_{hhh}/\lambda_{hhh}^{SM}$.
+In different models, the constraints of $\kappa_{\lambda}$ can be different, which is the hint of the discrimination to different BSMs.
+In general, the large range of $\kappa_{\lambda}$ is allowed and $\kappa_{\lambda}$ can be referred to as a free parameter.
+
+A more general approach can be derived by the effective field theory (EFT) with top-down perspective, which provides a model-independent way to search new physics.
+The concept is that the physics which are well understood in unobservable high energy scale can be reduced and integrated to match the phenomena in low energy scale.
+The effective terms of new physics are described by the high dimensional operators and suppressed by the powers of their high energy scale $\Lambda$.
+The BSM effects in the SM measurement can be considered as possible uncertainties, and increase the Higgs pair production rate.
+% The Standard model can be considered as a 4 dimensional EFT.~\cite{1401.7340}
+The effective Lagrangian relative to the Higgs pair production can be written as:
+\begin{equation} \label{eq:EffectiveL}
+  \begin{aligned}
+	\mathcal{L}_{eff} = \mathcal{L}_{SM} + 
+	\sum_{i} \frac{c_{i}^{(5)}}{\Lambda}\mathcal{O}_{i}^{(5)} + 
+	\sum_{i} \frac{c_{i}^{(6)}}{\Lambda^{2}}\mathcal{O}_{i}^{(6)} +
+	\sum_{i} \frac{c_{i}^{(7)}}{\Lambda^{3}}\mathcal{O}_{i}^{(7)} + ...... ,
+  \end{aligned}
+\end{equation}
+where $\mathcal{O}^{(n)}$ is the n-dimensional operators with corresponding {\em Wilson coefficients \/} $c_{i}^{(n)}$.
+At the LHC, the EFT only with 6-D operators are focused~\cite{1610.07922, 1008.4884, 1410.3471}, because 5-D operator violates the lepton number~\cite{Buchmller1986} and higher dimensional operators are highly suppressed.
+
+After spontaneous symmetry breaking, the modified coupling terms are generated by these high dimension operators. 
+For the di-Higgs production through gluon-gluon fusion, the effective terms can be rewritten with the anomalous coupling constants, which provides a simple physics interpretation:~\cite{1507.02245}
+\begin{equation} \label{eq:EffectiveLwithAnomalous}
+  \begin{aligned}
+	\Delta\mathcal{L} =
+        & \frac{1}{2}\partial_{\mu}H\partial^{\mu}H-\frac{m_{H}^{2}}{2}H^{2}-\kappa_{\lambda}\lambda^{SM}\upsilon H^{3} \\
+		& - \frac{m_{t}}{\upsilon}(\upsilon+\kappa_{t}H+\frac{c_{2}}{\upsilon}HH)(\bar{t_{L}}t_{R}+h.c.) \\
+		& + \frac{\alpha_{s}}{12\pi\upsilon}(c_{g}H-\frac{c_{2g}}{2\upsilon}HH)G_{\mu\upsilon}^{A}G^{A,\mu\upsilon} .
+  \end{aligned}
+\end{equation}
+
+It contains five anomalous Higgs couplings.
+The two modified couplings which already exist in the SM are described as the deviation from the SM Higgs self-coupling $\kappa_{\lambda}$, and the deviation from the SM top Yukawa coupling $\kappa_{t}$.
+Three pure BSM contact interaction couplings are the coupling of a gluon pair with a Higgs boson pair $c_{2g}$, the coupling and of a gluon pair with a single Higgs boson $c_{g}$, the coupling of a top quark pair with a Higgs boson pair $c_{2}$.
+Corresponding Feynman diagrams are shown in Fig.~\ref{fig:anomalousFey}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Figures/Chapter1/AnoFey.png}
+  \caption{The Feynman diagrams of anomalous coupling in HH production.}
+  \label{fig:anomalousFey}
+\end{figure}
+
+The effect on the cross section of Higgs pair production is written as the function of five anomalous coupling constants, which is shown in Eq.~\ref{eq:EffectiveXS}.~\cite{1507.02245, 1608.06578} % xs and shape clustering
+\begin{equation} \label{eq:EffectiveXS}
+  \begin{aligned}
+	R_{HH}=\frac{\sigma_{HH}}{\sigma^{SM}_{HH}} = 
+	& A_{1}\kappa_{t}^{4} + A_{2}c_{2}^{2} + (A_{3}k_{t}^{2}+A{4}c_{g}^{2})\kappa_{\lambda}^{2}+A_{5}c_{2g}^{2}
+	\\& + (A_{6}c_{2}+A_{7}\kappa_{t}\kappa_{\lambda})\kappa_{t}^{2} + (A_{8}\kappa_{t}\kappa_{\lambda}+A_{9}c_{g}\kappa_{\lambda})c_{2}
+	\\& + A_{10}c_{2}c_{2g}+(A_{11}c_{g}\kappa_{\lambda}+A_{12}c_{2g})\kappa_{t}^{2}
+	\\& + (A_{13}\kappa_{\lambda}c_{g}+A_{14}c_{2g})\kappa_{t}\kappa_{\lambda}+A_{15}c_{g}c_{2g}\kappa_{\lambda} .
+  \end{aligned}
+\end{equation}
+The coefficients $A_{i}$ can be extracted from a fit to the cross section estimated by the simulation in different BSM parameter points~\cite{1608.06578}.
+The fit results are shown in Table.~\ref{tab:CoeffNonResXS}.
+% Some constraints are already studied. For example, $\kappa_{t}$ is constrained in the region between 0.5 and 2.5.~\cite{1306.6464}
+
+\begin{table}[h]
+\centering
+\caption{Coefficient of Eq.~\ref{eq:EffectiveXS} in 13 TeV proton-proton collisions.~\cite{1608.06578}}
+\label{tab:CoeffNonResXS}
+\begin{tabular}{|lllll|}
+\hline
+$A_{1}$=2.09  & $A_{2}$=10.15 & $A_{3}$=0.28 & $A_{4}$=0.10  & $A_{5}$=1.33  \\
+$A_{6}$=-8.51 & $A_{7}$=-1.37 & $A_{8}$=2.83 & $A_{9}$=1.46  & $A_{10}$=-4.92 \\
+$A_{11}$=-0.68 & $A_{12}$=1.86  & $A_{13}$=0.32 & $A_{14}$=-0.84 & $A_{15}$=-0.57 \\ \hline
+\end{tabular}
+\end{table}
+
+Not only the cross-section, but the signal topology is influenced by the coupling constants.
+The small modification of the coupling may change the kinematic of the final states drastically.
+Because exploring all possible combination of five coupling constants is time consuming and not possible for experiment search, the shape benchmark models are built and described in Ref.~\cite{1507.02245}.
+The 5-D parameter space is scanned to understand their kinematic properties.
+The events which have similar kinematic distribution shape are grouped as a cluster.
+The latest recommended 12 benchmark points are shown in Tab.~\ref{tab:NonResBenchN12}, and the kinematic distribution shapes are demonstrated in Fig.~\ref{fig:NonResClusterShapes}.
+
+\begin{table}[h]
+\centering
+\caption{The benchmark points in 5D parameter space of non-resonance HH production with $N_{cluster}=12$.}
+\label{tab:NonResBenchN12}
+\begin{tabular}{cccccc}
+\hline
+Benchmark                & $\kappa_{\lambda}$ & $\kappa_{t}$ & $c_{2}$ & $c_{g}$ & $c_{2g}$ \\ \hline
+1                        & 7.5               & 1.0         & -1.0    & 0.0     & 0.0      \\
+2                        & 1.0               & 1.0         & 0.5     & -0.8    & 0.6      \\
+3                        & 1.0               & 1.0         & -1.5    & 0.0     & -0.8     \\
+4                        & -3.5              & 1.5         & -3.0    & 0.0     & 0.0      \\
+5                        & 1.0               & 1.0         & 0.0     & 0.8     & -1       \\
+6                        & 2.4               & 1.0         & 0.0     & 0.2     & -0.2     \\
+7                        & 5.0               & 1.0         & 0.0     & 0.2     & -0.2     \\
+8                        & 15.0              & 1.0         & 0.0     & -1      & 1        \\
+9                        & 1.0               & 1.0         & 1.0     & -0.6    & 0.6      \\
+10                       & 10.0              & 1.5         & -1.0    & 0.0     & 0.0      \\
+11                       & 2.4               & 1.0         & 0.0     & 1       & -1       \\ 
+12                       & 15.0              & 1.0         & 1.0     & 0.0     & 0.0      \\ \hline
+SM                       & 1.0               & 1.0         & 0       & 0       & 0        \\ \hline
+\end{tabular}
+\end{table}
+
+% The coupling constants are scanned in the region shown in Table. , which are total 1507 points.
+% The points are divided into 12 clusters
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.9\textwidth]{Figures/Chapter1/NonResClusterShapes}
+  \caption{Generator-level distribution of di-Higgs boson mass $m_{hh}$ in different clusters.~\cite{1507.02245} Total 1507 points are scanned and split into 12 clusters.}
+  \label{fig:NonResClusterShapes}
+\end{figure}
+
+\clearpage
+
+\subsection{Decay channels}
+
+The SM expected Higgs boson decay channels and branching ratio as a function of the Higgs mass near 125 GeV are shown in Fig.~\ref{fig:HiggsDecayBr}.
+The decay branching ratio of Higgs with mass $m_{H}=$125.09 GeV is summarized in Tab.~\ref{tab:SMHiggsBr} and the diHiggs decay branching ratio of some channels is shown in Fig.~\ref{fig:HHDecayBr}.
+Because the Higgs pair production is quite rare, the preferred decay channels are limited.
+To be sensitive in experiment, it is requested that at least one Higgs which decays into a pair of b quarks or a pair of W bosons due to the large branching ratios.
+However, the $H \rightarrow bb$ channel suffers from QCD background contamination.
+The $H \rightarrow WW$ channel usually requests that one of the W bosons should decay leptonically to suppressed multi-jets background, which reduces the branching ratio.
+The $b\bar{b} b\bar{b}$, $b\bar{b}\gamma\gamma$, $b\bar{b}\tau\tau$ and $b\bar{b} WW$ channels are expected to be the most sensitive channels, where the first three are explored in CMS Run I (see Sec.~\ref{sec:PreviousResult}).
+The advantages and challenges strongly depend on different final states.
+The $b\bar{b} b\bar{b}$ channel is benefited by the highest branching ratio and fully reconstructed by the b-tagging technique. (see Sec.~\ref{sec:btag})
+Additionally, this channel is possible to be explored in high mass region due to the special topology of two overlapped b jets from a highly boosted objects.~\cite{CMS-PAS-BTV-13-001}
+The $b\bar{b} WW$ channel profits the second largest branching ratio, but is contaminated by $t\bar{t}\rightarrow b\bar{b} WW$.
+The $b\bar{b}\tau\tau$ channel is trade-off between the branching ratio and the signal purity.
+Although it is hard to distinguish the $\tau$ lepton which decays into electron and muon (labeled as $\tau_{lep}$), the $\tau$ decaying into hadronic jets (labeled as $\tau_{had}$) is well tagged due to the characteristic of small jet cone with a low particle multiplicity.~\cite{1510.07488}
+The $b\bar{b}\gamma\gamma$ channel is a clean channel due to high selection efficiency and good energy resolution in $H \rightarrow \gamma\gamma$ decay. This channel is suffer from the low branching ratio.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter1/HiggsDecayBr}
+  \caption{The Higgs decay branching ratio as a function of the Higgs mass near 125 GeV.~\cite{1610.07922}}
+  \label{fig:HiggsDecayBr}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\caption{The summarized table of Higgs decay branching ratio with Higgs mass $H_{m}=125.09$ GeV.~\cite{1610.07922}}
+\label{tab:SMHiggsBr}
+\begin{tabular}{lc}
+\hline
+Decay mode                   & Branching ratio (\%) \\ \hline
+$H \rightarrow bb$           & 58.09                \\
+$H \rightarrow WW$           & 21.52                \\
+$H \rightarrow gg$           & 8.180                \\
+$H \rightarrow \tau\tau$     & 6.256                \\
+$H \rightarrow cc$           & 2.884                \\
+$H \rightarrow ZZ$           & 2.641                \\
+$H \rightarrow \gamma\gamma$ & 0.227                \\
+$H \rightarrow Z\gamma$      & 0.154                \\
+$H \rightarrow \mu\mu$       & 0.022                \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter1/XSgraph}
+  \caption{The Higgs boson pair decay branching ratio in five channels.}
+  \label{fig:HHDecayBr}
+\end{figure}
+
+\clearpage
+
+\subsection{Previous result} \label{sec:PreviousResult}
+
+% resonance results? (which kind of model?)
+% non-resonance: exp constraint on coupling constant?
+
+\subsubsection{ATLAS Run I search}
+
+Both searches of the resonance and the non-resonance di-Higgs boson productions are performed by the ALTAS collaboration, using LHC run I data of pp collision at $\sqrt{s}= 8$ $TeV$ corresponding to an integrated luminosity of 20.3 $fb^{-1}$.
+The final states with $b\bar{b}b\bar{b}$~\cite{1506.00285}, $b\bar{b}\gamma\gamma$~\cite{1406.5053}, $b\bar{b}\tau_{had}\tau_{lep}$ and $\gamma\gamma WW$~\cite{1509.04670} are searched and evaluated the combined sensitivity assuming the SM Higgs decay branching ratios.
+
+In case of resonant di-Higgs production, the spin-0, neutral and heavy resonance Higgs $H$ is searched. 
+The upper limits at 95\% confidence level (CL) upper limits are set for the product of the production cross-section $\sigma(gg\rightarrow H\rightarrow hh)$ as function of the resonance mass $m_{H}$.
+The searched resonance mass range depends on different channels.
+The observed and expected limits of searched channels and combined result are shown in Fig.~\ref{fig:ATLAScombinedResHH}.
+The combined limit varies from 2.1 pb at 260 GeV to 0.011 pb at 1000 GeV.
+The most significant excess is at 300 GeV with 2.5 standard deviations $\sigma$.
+The results are interpreted to exclude the resonance mass ranges in different BSM models.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter1/ATLAScombinedResHH}
+  \caption{The observed and expected 95\% CL upper limits on $\sigma(gg\rightarrow H\rightarrow hh)$ at $\sqrt{s}= 8$ $TeV$ as function of the resonance mass $m_{H}$, which combine all of the searched channels.~\cite{1509.04670}}
+  \label{fig:ATLAScombinedResHH}
+\end{figure}
+
+% In search of resonance HH production, the hypothesis of the signal is mainly based on the spin-0 CP even heavy neutral scalar boson $H$ decaying into two SM-like Higgs $hh$.
+% With the $b\bar{b}\gamma\gamma$ channel, the observed (expected) upper limits on the cross-section $\sigma(gg\rightarrow H\rightarrow hh)$ are set for resonance masses from 260 GeV to 500 GeV. The observed (expected) exclusion range is 0.7-3.5 (0.7-1.7) pb.
+% With the $b\bar{b}b\bar{b}$ channel, the hypotheses for 2HDM and Bulk RS model are searched with resonance mass from 500 to 1500 GeV.
+% The excluded resonance mass range for spin-2 Graviton in Bulk RS model are shown in Tab. .
+% The neutral heavy boson search is performed for 2HDM model. The constraints are placed on several benchmark models with different parameters.
+% With the $b\bar{b}\tau\tau$ channel, the limits on $\sigma(gg\rightarrow H\rightarrow hh)$ are set for resonance masses from 260 GeV to 1000 GeV. The observed (expected) exclusion range is 0.46-4.2 (0.28-2.6) pb.
+% With the $\gamma\gamma WW$ channel, the limits on $\sigma(gg\rightarrow H\rightarrow hh)$ are set for resonance masses from 260 GeV to 500 GeV. The observed (expected) exclusion range is 10.9-18.7 (5.9-11.2) pb.
+
+For the non-resonance di-Higgs production, the SM di-Higgs production is searched and the results are compared with the SM predicted cross-section $\sigma_{SM}(gg\rightarrow hh)=9.9\pm 1.7$ fb with Higgs mass $m_{H}=125.4$ GeV at 8 TeV pp collisions~\cite{1309.6594}.
+% With the $b\bar{b}\gamma\gamma$ channel, a 95\% confidence level (CL) upper limit on cross-section $\sigma(gg \rightarrow hh)$ of 2.2 (1.0) pb is observed (expected), presenting  2.4 standard deviations.
+% With the $b\bar{b}b\bar{b}$ channel, the observed limit on cross-section $\sigma(gg\rightarrow H \rightarrow hh \rightarrow bbbb)$ is 202 fb in agreement with expected limit.
+% For $b\bar{b}\tau\tau$ and $\gamma\gamma WW$ channels, the observed (expected) limits on $\sigma(gg \rightarrow hh)$ are 1.6 (1.3) and 11.4 (6.7) respectively. 
+The summary of non-resonance result of Higgs pair production is shown in Tab.~\ref{tab:ATLASnonRes}.
+The observed (expected) combined upper limit is 0.69 (0.47) pb, which is about 70 (48) times larger than SM prediction.
+The combined observed result presents 1.7 standard deviations.
+
+All results are no significant excess in the data beyond the background expectation.
+
+\begin{table}[h]
+\centering
+\caption{The observed and expected 95\% CL upper limits on the cross-section of non-resonance process $\sigma(gg\rightarrow hh)$ at $\sqrt{s}= 8$ $TeV$.}
+\label{tab:ATLASnonRes}
+\begin{tabular}{|c|c|c|}
+\hline
+Channel           & \begin{tabular}[c]{@{}c@{}}Observed (expected)\\ upper limit on $\sigma(gg\rightarrow H \rightarrow hh)$\end{tabular} & Relative to $\sigma_{SM}$ \\ \hline
+$\gamma\gamma bb$ & 2.2 (1.0)                                                                                                             & 220 (100)                 \\ \hline
+$\gamma\gamma WW$ & 11.4 (6.7)                                                                                                            & 1150 (680)                \\ \hline
+$bb \tau\tau$     & 1.6 (1.3)                                                                                                             & 160 (130)                 \\ \hline
+$bbbb$            & 0.62 (0.62)                                                                                                           & 63 (63)                   \\ \hline
+Combined          & 0.69 (0.47)                                                                                                           & 70 (48)                   \\ \hline
+\end{tabular}
+\end{table}
+
+\subsubsection{CMS Run I search}
+
+By the CMS collaboration, the resonance searches are performed by $b\bar{b}b\bar{b}$~\cite{1503.04114}, $b\bar{b}\gamma\gamma$~\cite{1603.06896} and $b\bar{b}\tau_{had}\tau_{had}$ channels~\cite{1707.00350}, using LHC run I data of pp collision at $\sqrt{s}= 8$ $TeV$ corresponding to an integrated luminosity of about 19 $fb^{-1}$.
+Both spin-0 and spin-2 resonance HH productions are searched and combined with three searched channels.
+The combined observed (expected) limits on $\sigma(pp\rightarrow X \rightarrow HH)$, which are shown in Fig.~\ref{fig:CMSRunIResCombined}, range from 1134 (776) and 1088 (760) fb at $m_{x}=300$ GeV to 21 (31) and 18 (26) fb at $m_{x}=1000$ GeV for spin-0 and spin-2 resonances respectively.
+The results are compared with the theoretical prediction based on the bulk and RS1 models and perform the exclusions.
+The resonance in very high mass range from 1 TeV to 3 TeV is explored in $b\bar{b}b\bar{b}$ channel~\cite{1602.08762} and from 800 to 2500 GeV in $b\bar{b}\tau_{had}\tau_{lep}$ channel~\cite{CMS-PAS-EXO-15-008}, which is benefited by the special b-tagging technique for boosted b jets.~\cite{CMS-PAS-BTV-13-001}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.9\textwidth]{Figures/Chapter1/CMSRunIResCombined}
+  \caption{The combined observed and expected limits on resonance Higgs pair production for spin-0 (left) and spin2 (right).
+  The theoretical curves are predicted by WED models with different parameters: Radion in different mass scale $\Lambda_{R}=1,3$ TeV, graviton in different scenarios. The other WED parameters are $kl=kr_{c}=35$ and $k/\overline{M}_{Pl}=0.2$.~\cite{1707.00350}}
+  \label{fig:CMSRunIResCombined}
+\end{figure}
+
+The non-resonance of SM-like di-Higgs production is searched in $b\bar{b}\gamma\gamma$ and $b\bar{b}\tau\tau$ channels and combined together.~\cite{1707.00350}
+The observed (expected) limit of 0.43 (0.47) fb is set for the SM Higgs pair production cross-section with decay branching ratio, which is 43 (47) times larger than the SM prediction.
+The deviation $\kappa_{\lambda}$ from SM Higgs self-coupling are scanned in $b\bar{b}\gamma\gamma$ channel, and the result is shown in Fig.~\ref{fig:CMSRunINonRes}.
+The range of $\kappa_{\lambda}$ in $\kappa_{\lambda}<-17$ and $\kappa_{\lambda}<-22.5$ is excluded.~\cite{1603.06896}
+
+All results are no significant excess in the data beyond the background expectation.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter1/CMSRunINonRes}
+  \caption{The limits on the cross-section of non-resonance di-Higgs production in $b\bar{b}\gamma\gamma$ channel in scanned anomalous coupling $\kappa_{\lambda}$. The other coupling constants are the same as SM prediction.~\cite{1603.06896}}
+  \label{fig:CMSRunINonRes}
+\end{figure}
+
+% \clearpage
+
+The comparison of the limits on spin-0 resonance HH production cross-section as function as the resonance mass $m_{X}$ are shown in Fig.~\ref{fig:CMS_ATLASRunIResCombined}, which includes the searches in different channels by the CMS and the combination results by the ALTLAS.
+The different channels complement each other in the different resonance mass range.
+For example, the $b\bar{b}\gamma\gamma$ channel dominates the sensitivity of low mass region $m_{X}\leq 400$ GeV, the $b\bar{b}\tau\tau$ channel is good at intermediate mass region $400$ GeV $< m_{X} \leq 700$ GeV and the $b\bar{b}b\bar{b}$ channel dominates the high mass region $m_{X}>700$ GeV.
+Therefore, the exploration in different channels is important to increase the sensitivity.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Figures/Chapter1/CMS_ATLASRunIResCombined}
+  \caption{The comparison of the limits on $pp \rightarrow X^{spin-0} \rightarrow HH$ in different HH decay channels by the CMS collaboration, also the combined result from the ATLAS collaboration. ~\cite{1610.07922}}
+  \label{fig:CMS_ATLASRunIResCombined}
+\end{figure}

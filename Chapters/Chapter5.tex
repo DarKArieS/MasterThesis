@@ -1,0 +1,416 @@
+\chapter{Modeling}
+
+\label{Chapter5}
+
+An accurate modeling is an important part to estimate the signal strength and excluded limits.
+In this analysis, the modeling is derived via both the invariant mass of the di-photon ($m_{\gamma\gamma}$) and the di-jet ($m_{jj}$) candidates.
+The 2D fit on the $m_{\gamma\gamma}$ $\times$ $m_{jj}$ plane is employed to model the expected signal and background shapes.
+The function of fit is the product of the two independent functions for $m_{\gamma\gamma}$ and $m_{jj}$ with assumption that these two variables are uncorrelated.
+This assumption is checked for both signal and background modelings. %by comparing the 2D distribution from the simulated samples with the fitted function.
+The procedure of modeling is introduced in this chapter.
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+
+\section{Signal modeling}\label{sec:SigModling}
+
+The function used to model both resonant and non-resonant signal shapes is double-sided Crystal Ball function.
+The double-sided Crystal Ball function is composed of a Gaussian core and two independent exponential tails:
+\begin{equation}\label{eq:DoubleCB}\footnotesize
+	f(x;\mu, \sigma, \alpha_{L}, p_{L}, \alpha_{R}, p_{R}) = N \cdot 
+	\begin{cases} 
+		A_{L} \cdot \left( B_{L} - \frac{x - \mu}{\sigma} \right)^{-p_{L}}, & \mbox{for } \frac{x - \mu}{\sigma} > - \alpha_{L} \\
+		A_{R} \cdot \left( B_{R} + \frac{x - \mu}{\sigma} \right)^{-p_{R}}, & \mbox{for } \frac{x - \mu}{\sigma} > \alpha_{R} \\
+		e^{  \frac{\left( x - \mu \right)^{2}}{\sigma^{2}} }, & \mbox{for } \frac{x - \mu}{\sigma} < - \alpha_{L}  \mbox{ and } \frac{x - \mu}{\sigma} > \alpha_{R}
+	\end{cases},
+\end{equation}
+where the $A_{L}, A_{R}, B_{L}, B_{R}$ constants are defined by:
+\begin{eqnarray}
+	A_{k} &=& \left( \frac{p_{k}}{\left| \alpha_{k} \right|} \right)^{p_{k}} \cdot e^{-\frac{\alpha^{2}}{2}}, \\
+	B_{k} &=& \frac{p_{k}}{\left| \alpha_{k} \right|} - \left| \alpha_{k} \right|,
+\end{eqnarray}
+where $k$ is either $L$ or $R$.
+% \begin{equation} \label{eq:DoubleCB}
+  % \begin{aligned}
+	% GG.
+  % \end{aligned}
+% \end{equation}
+The additional exponentials provide the good description for the events in the lower and higher energy tail which may be mismeasured, and the Gaussian core extracts the peak position and resolution.
+This function is able to model the mass distribution well both for the high resolution $m_{\gamma\gamma}$ and low resolution $m_{jj}$ in whole analysis.
+
+The parameters of function are obtained by fits to the simulated signal samples after selection and categorization.
+Each fit is independently done for each analyzed point.
+Some results of fit projected to one-dimension are demonstrated in Fig.~\ref{fig:sig_highmassSM}, Fig.~\ref{fig:sig_lowmassSM}, and Fig.~\ref{fig:sig_rad600}.
+In the figures, the effective sigma $\sigma_{eff}$ is extracted by a half of the width of the narrowest region containing 68.3\% of the signal shape.
+The mean value $\mu$ is obtained from the fitted Gaussian core of the Crystal Ball function.
+
+\begin{figure*}[h]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SMHHLM_signal_fit_mgg_cat2}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SMHHLM_signal_fit_mgg_cat3}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SMHHLM_signal_fit_mjj_cat2}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SMHHLM_signal_fit_mjj_cat3}\hfil
+  \caption{Signal fits for the SM HH non-resonant sample after full analysis selection, in high mass region, high (left) and medium (right) purity categories. Top plots: $\Mgg$. Bottom plots: $\Mjj$.}
+  \label{fig:sig_highmassSM}
+\end{figure*}
+
+\begin{figure*}[h]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SMHHLM_signal_fit_mgg_cat0}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SMHHLM_signal_fit_mgg_cat1}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SMHHLM_signal_fit_mjj_cat0}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SMHHLM_signal_fit_mjj_cat1}\hfil
+  \caption{Signal fits for the SM HH non-resonant sample after full analysis selection, in low mass region, high (left) and medium (right) purity categories. Top plots: $\Mgg$. Bottom plots: $\Mjj$.}
+  \label{fig:sig_lowmassSM}
+\end{figure*}
+
+
+\begin{figure*}[h]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SigFit_Res300_Grav__signal_fit_mgg_cat0}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SigFit_Res300_Grav__signal_fit_mgg_cat1}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SigFit_Res300_Grav__signal_fit_mjj_cat0}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SignalFits/SigFit_Res300_Grav__signal_fit_mjj_cat1}\hfil
+  \caption{Signal fits for the Graviton 600 GeV mass sample after full analysis selection, in high (left) and medium (right) purity categories. Top plots: $\Mgg$. Bottom plots: $\Mjj$.}
+  \label{fig:sig_rad600}
+\end{figure*}
+
+\subsection{Correlation Studies}
+
+The chosen 2D fit function is the direct product of two independent functions for two variables which doesn't take the correlation between two variables into account.
+Therefore, whether the correlation is sensitive to our signal samples should be checked.
+This check is performed by the comparison with the simulated signal samples and the 2D fit functions.
+The different between the distribution of the simulated samples and the function is defined as residual $R_{ij}$:
+\begin{equation} \label{eq:SigCorResidues}
+  \begin{aligned}
+	R_{ij} = \frac{N^{\textrm{PDF}}_{ij} - N^{\textrm{MC}}_{ij}}{\sigma_{N^{\textrm{PDF}}_{ij}}^{\textrm{Poisson}}},
+  \end{aligned}
+\end{equation}
+where $ij$ refers to bin $i$ in $m_{\gamma\gamma}$ and bin $j$ in $m_{jj}$, and $\sigma$ is the Poisson error of the function (PDF) and the simulated events (MC).
+% The simulated samples are normalized to 1 $fb^{-1}$.  % ** check this one, or make my own plots!
+The results are shown in Fig.~\ref{fig:sig_resi_1} - ~\ref{fig:sig_resi_4}.
+There is no specific structure in the region where the signal is expected.
+Therefore, we assume that there is no correlation between these two modeling variables.
+
+\begin{figure*}[h]
+  \centering
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_mc_HM_cat0}\hfil
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_pd_HM_cat0}\hfil
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_re_HM_cat0}\hfil
+  \caption{2D distributions of the signal MC (left), fitted PDF model (center) and 2D residuals (right) for the High Mass-High Purity Category non-resonant selection.}
+  \label{fig:sig_resi_1}
+\end{figure*}
+
+\begin{figure*}[h]
+  \centering
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_mc_HM_cat1}\hfil
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_pd_HM_cat1}\hfil
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_re_HM_cat1}\hfil
+  \caption{2D distributions of the signal MC (left), fitted PDF model (center) and 2D residuals (right) for the High Mass-Medium Purity Category non-resonant selection.}
+  \label{fig:sig_resi_2}
+\end{figure*}
+
+\begin{figure*}[h]
+  \centering
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_mc_LM_cat0}\hfil
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_pd_LM_cat0}\hfil
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_re_LM_cat0}\hfil
+  \caption{2D distributions of the signal MC (left), fitted PDF model (center) and 2D residuals (right) for the Low Mass-High Purity Category non-resonant selection.}
+  \label{fig:sig_resi_3}
+\end{figure*}
+
+
+\begin{figure*}[h]
+  \centering
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_mc_LM_cat1}\hfil
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_pd_LM_cat1}\hfil
+\includegraphics[width=0.3\textwidth]{figures/Chapter5/SignalResiduals/h_re_LM_cat1}\hfil
+  \caption{2D distributions of the signal MC (left), fitted PDF model (center) and 2D residuals (right) for the Low Mass-Medium Purity Category non-resonant selection.}
+  \label{fig:sig_resi_4}
+\end{figure*}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+
+\section{Background modeling} \label{sec:BgkModling}
+
+% There are several methods used to build background model.
+% ...
+
+In our analysis, the signal is not expected to have large contribution and doesn't form a huge peak in the spectrum of $m_{\gamma\gamma}$ and $m_{jj}$ in the data.
+The background model can be derived by fitting the selected data with a smooth falling function, which is so-called data-driven method.
+The probable signal can be referred as the fluctuation and not fit by the falling function.
+For the non-resonant background, the contribution of single Higgs is considered as background and may become a peak in the mass spectrum.
+In the resonance search, the contribution from single Higgs production is already excluded by the mass window requirement.
+The fits of simulated single Higgs production are added into the background models, which are described in Sec.~\ref{sec:SingleHModling}.
+
+The smooth falling functions chosen in this analysis are the family of Bernstein polynomials $\sum\limits_{i=0}^{n} p_{i}B^{n}_{i}$ with order $n$, for example:
+\begin{equation} \label{eq:Bernstein}
+  \begin{aligned}
+	& 1st~order = p_{0}(1-x) + p_{1}x \\
+	& 2nd~order = p_{0}(1-x)^{2} + p_{1}2x(1-x) + p_{2}x^{2} \\
+	& 3rd~order = p_{0}(1-x)^{3} + p_{1}3x(1-x)^{2}+ p_{2}3x^{2}(1-x) + p_{3}x^{3}. 
+  \end{aligned}
+\end{equation}
+The higher order polynomials have more degrees of freedom, % and should be fit with the higher statistics to obtain higher precision.
+and the precision of the fit is relative to the number of events.
+The chosen orders of polynomials are the same in both variables.
+Due to the different requirements of each signal region, the expected background yields can be very different.
+The chosen order of Bernstein depends on the number of selected yields to obtain the good fitness. % next-to-leading logarithmic test
+The categories with selected yields less than 15 are fit by first order, otherwise are fit by second order.
+
+The fit results projected to one of variables in resonance case are shown in Fig.~\ref{fig:bkg_fit_nonres_0} and Fig.~\ref{fig:bkg_fit_nonres_1}.
+The background only (green dash line) is from the fit of Bernstein polynomials.
+The full background (blue line) includes the single Higgs production background which are normalized according to their cross-section.
+The background modeling for resonance search is illustrated in Fig.~\ref{fig:bkg_fit_res_320}.
+
+\begin{figure*}[!htbp]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/FullBkgPlot_HM2mgg.pdf}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/FullBkgPlot_HM3mgg.pdf}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/FullBkgPlot_HM2mjj.pdf}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/FullBkgPlot_HM3mjj.pdf}\hfil
+  \caption{Background fits for the SM \HH non-resonant analysis in the high mass region. The plots on the left (right) show the distributions in the HPC (MPC) region.}
+  \label{fig:bkg_fit_nonres_0}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/FullBkgPlot_LM0mgg.pdf}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/FullBkgPlot_LM1mgg.pdf}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/FullBkgPlot_LM0mjj.pdf}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/FullBkgPlot_LM1mjj.pdf}\hfil
+  \caption{Background fits for the SM \HH non-resonant analysis in the low mass region. The plots on the left (right) show the distributions in the HPC (MPC) region.}
+  \label{fig:bkg_fit_nonres_1}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/Res300background_fit_mggcat0.pdf}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/Res300background_fit_mggcat1.pdf}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/Res300background_fit_mjjcat0.pdf}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/BackgroundFits/Res300background_fit_mjjcat1.pdf}\hfil
+
+  \caption{Background fits for the resonant analysis selection, assuming a spin-2 (Graviton) resonance with $m_{X} = 300$ GeV. The plots on the left (right) show the distributions in the HPC (MPC) region.}
+  \label{fig:bkg_fit_res_320}
+\end{figure*}
+
+\subsection{Bias Studies} \label{sec:biasstudy}
+
+It is impossible to define a exact function to model the background.
+The chosen function for background modeling must be checked that have no bias toward our signal.
+The bias is measured by extracting the signal strength $\mu$ with the chosen background function fit to MC toys.
+The MC toys are generated by other background shape hypotheses, which are obtained by the fit on the data photon control region.
+The fit results should not appear a statistically significant bias in the signal strength with all background shape hypotheses.
+The bias is defined as
+\begin{equation} \label{eq:CorBias}
+  \begin{aligned}
+	B = (\mu_{fit} - \mu_{true})/\sigma_{\mu},
+  \end{aligned}
+\end{equation}
+where $\sigma_{\mu}$ is the uncertainty from the fit procedure, 
+and the signal strength $\mu$ describes the composition of the signal model in the fit:
+\begin{equation} \label{eq:SigStrength}
+  \begin{aligned}
+	Fit~Result = \mu \times (Signal~model) + (Background~model).
+  \end{aligned}
+\end{equation}
+The bias of chosen function fit to other background shape hypotheses is required to smaller than 14\%, which is justified by the the effect of uncertainties on the signal strength which would be smaller than 1\%. % ** need to find the reference!!!
+
+The test background hypotheses are Laurent series and sums of $n$ exponentials for both $m_{\gamma\gamma}$ and $m_{jj}$. Each hypothesis is used to generate 2000 toys for the different categories.
+These toys are injected the expected signal yields according to the different categories with assuming signal cross-section of 1 fb. ($\mu_{true}=1$)
+
+Some examples of measured biases are shown in Fig.~\ref{fig:bkg_bias3}, Fig.~\ref{fig:bkg_bias4}.
+The measured bias of our chosen function is acceptable.
+
+% \begin{figure}[h]
+  % \centering
+  % \includegraphics[width=0.48\textwidth]{figures/Chapter5/biases_m250_cat0.pdf}\hfil
+  % \includegraphics[width=0.48\textwidth]{figures/Chapter5/biases_m250_cat1.pdf}\hfil
+  % \caption{Biases measured in the 250 GeV resonant selection in the HPC (left) and MPC (right).}
+  % \label{fig:bkg_bias1}
+% \end{figure}
+% \begin{figure}[h]
+  % \centering
+  % \includegraphics[width=0.48\textwidth]{figures/Chapter5/biases_m280_cat0.pdf}\hfil
+  % \includegraphics[width=0.48\textwidth]{figures/Chapter5/biases_m280_cat1.pdf}\hfil
+  % \caption{Biases measured in the 280 GeV resonant selection in the HPC (left) and MPC (right).}
+  % \label{fig:bkg_bias2}
+% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.48\textwidth]{figures/Chapter5/biases_m300_cat0.pdf}\hfil
+  \includegraphics[width=0.48\textwidth]{figures/Chapter5/biases_m300_cat1.pdf}\hfil
+  \caption{Biases measured in the 300 GeV resonant selection in the HPC (left) and MPC (right).}
+  \label{fig:bkg_bias3}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.48\textwidth]{figures/Chapter5/biases_m650_cat0.pdf}\hfil
+  \includegraphics[width=0.48\textwidth]{figures/Chapter5/biases_m650_cat1.pdf}\hfil
+  \caption{Biases measured in the 650 GeV resonant selection in the HPC (left) and MPC (right).}
+  \label{fig:bkg_bias4}
+\end{figure}
+
+\subsection{Correlation Studies}
+
+Since there is no peak structure in the background shape, it is hard to check the correlation just by the structure of residues.
+We generate the toy dataset according to the fit function with additional terms to simulate the correlation between $m_{\gamma\gamma}$ and $m_{jj}$.
+The original fit function $g(x,y)$ assuming that two variables are independent can be expressed as:  
+\begin{equation} \label{eq:2DfitFuncOri}
+  \begin{aligned}
+	g(x,y) = \left( \sum_{i} a_{i} x^{i}\right)\left( \sum_{k} a_{k} y^{k} \right),
+  \end{aligned}
+\end{equation}
+where x and y is $m_{\gamma\gamma}$ and $m_{jj}$ in our case.
+
+In general, the correlation can happen in the coefficient $a_{i}$ and $a_{k}$.
+We just assume the polynomials fit function with more degree of freedom for fitting to approach this condition:
+\begin{equation} \label{eq:2DfitFuncGeneral}
+  \begin{aligned}
+	f(x,y) = \sum_{i}\sum_{k}c_{ik}x^{i}y^{k}.
+  \end{aligned}
+\end{equation}
+Now we add back more terms to $g(x,y)$ to increase the degree of freedom.
+With the second order polynomials, the additional terms can be written as:
+\begin{equation} \label{eq:2DfitFuncOriCor}
+  \begin{aligned}
+	g_{corr}(x,y) = g(x,y) + \alpha\cdot\Mgg\cdot\Mjj + \beta\cdot\Mgg^{2}\cdot\Mjj+ \omega\cdot\Mgg\cdot\Mjj^{2}.
+  \end{aligned}
+\end{equation}
+The toys are generated by $g_{corr}(x,y)$ with different coefficient $(\alpha, \beta, \omega)$ and different number of events, and injected the signal events.
+These toys are fit by $g(x,y)$ to extract the signal strength, and calculate the bias.
+
+Fig.~\ref{fig:corr_bias} shows the bias as a function of $\alpha$.
+Because there is no bias larger than 14\%,
+the impact on the correlation terms can be ignored.
+
+\begin{figure*}[h]
+  \centering
+\includegraphics[width=0.9\textwidth]{figures/Chapter5/CorrelationBias.pdf}
+\caption{The average bias on measuring the signal with $g(m_{\gamma\gamma},m_{jj})$ on toys created by $g_{corr}(m_{\gamma\gamma},m_{jj})$ with $\alpha$ from 0 to 1.}
+\label{fig:corr_bias}
+\end{figure*}
+
+
+\subsection{Single Higgs background modeling} \label{sec:SingleHModling}
+
+The single Higgs modeling relies on the simulated samples described in Sec.~\ref{sec:BkgMC}.
+There are five mentioned production modes considered in this analysis: ggH, VBF H, $t\bar{t}$H, $b\bar{b}$H, and VH.
+Different production modes cause the different shapes in the distribution of $m_{\gamma\gamma}$ and $m_{jj}$ and rely on different fit functions.
+For the gluon-gluon fusion production (ggH) and vector boson fusion (VBF H), two selected background jets constitute a smooth falling spectrum.
+They are modeled by double-sided Crystal Ball function $\times$ second order Bernstein polynomials for $m_{\gamma\gamma} \times m_{jj}$.
+For the other single Higgs production associated with $b\bar{b}$, $t\bar{t}$, and one vector boson, 
+the resonance is expected in the $m_{jj}$ spectrum due to the kinematics turn on and vector boson resonance. % ** why tt and bb? have trun on?
+They are modeled by two double-sided Crystal Ball functions both for $m_{\gamma\gamma}$ and $m_{jj}$.
+
+The predicted cross-section of these processes and selection efficiencies are listed in Tab.~\ref{tab:smsingleh}.
+The examples of fit model are shown in Fig.~\ref{fig:bkg_fit_singleH_ggh} for ggH process and Fig.~\ref{fig:bkg_fit_singleH_tth} for ttH process.
+
+\begin{table}[h]
+	\caption{SM single Higgs cross sections at 13 TeV with their respective selection efficiencies for the four different non-resonant analysis categories.}
+	{\small
+		\centering
+		\begin{tabular}{c | c | c | c | c | c }
+		 & Cross section (pb) & HM-HPC (\%) & HM-MPC (\%) & LM-HPC (\%) & LM-MPC (\%)\\ \hline
+		ggH & 44.14 & $0.029\pm0.0017$ & $0.148\pm0.0038$ & $0.033\pm0.0018$ & $0.151\pm0.0039$  \\
+		VBF & 3.7820 & $0.038\pm0.001$ & $0.239\pm0.0025$ & $0.048\pm0.0011$ & $0.242\pm0.0025$ \\
+		VH & 2.257 & $0.271\pm0.0038$ & $0.748\pm0.0063$ & $0.367\pm0.0044$ & $0.962\pm0.0071$ \\
+		$b\bar{b}$H & 0.488  & $0.0297\pm0.0035$  & $0.262\pm0.010$  & $1.02\pm0.020$  &  $2.59\pm0.032$ \\
+		$t\bar{t}$H & 0.5071 & $3.41\pm0.027$ & $3.69\pm0.029$ & $8.38\pm0.042$ & $8.17\pm0.042$ 
+		\end{tabular}
+	}
+	\label{tab:smsingleh}
+\end{table}
+
+\begin{figure*}[!htbp]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SingleHiggsShapes/ggh_HM_signal_fit_mgg_cat2}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SingleHiggsShapes/ggh_HM_signal_fit_mgg_cat3}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SingleHiggsShapes/ggh_HM_signal_fit_mjj_cat2}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SingleHiggsShapes/ggh_HM_signal_fit_mjj_cat3}\hfil
+  \caption{The modeling for single Higgs production through gluon-gluon fusion in high mass, high purity (left) and medium purity (right) region.
+  Top plots are the projections in $m_{\gamma\gamma}$ and bottom plots are the projections in $m_{jj}$.}
+  \label{fig:bkg_fit_singleH_ggh}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SingleHiggsShapes/tth_HM_signal_fit_mgg_cat2}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SingleHiggsShapes/tth_HM_signal_fit_mgg_cat3}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SingleHiggsShapes/tth_HM_signal_fit_mjj_cat2}\hfil
+  \includegraphics[width=0.45\textwidth]{figures/Chapter5/SingleHiggsShapes/tth_HM_signal_fit_mjj_cat3}\hfil
+  \caption{The modeling for single Higgs production associated with a pair of top quarks in high mass, high purity (left) and medium purity (right) region.
+  Top plots are the projections in $m_{\gamma\gamma}$ and bottom plots are the projections in $m_{jj}$.}
+  \label{fig:bkg_fit_singleH_tth}
+\end{figure*}
+
+%----------------------------------------------------------------------------------------
+%	SECTION 3
+%----------------------------------------------------------------------------------------
+
+\section{Systematic uncertainties}
+
+In this analysis, the systematics uncertainties come from two possible categories: normalization and shape.
+
+First, the uncertainty of estimation of the integrated luminosity modifies the normalization of expected signal.
+It is taken as 2.5\%.~\cite{CMS-PAS-LUM-17-001}
+Other uncertainties influence the selection efficiency and impact on the modeling and signal extraction.
+
+The photon relative uncertainties are provided by SM $H \rightarrow \gamma\gamma$ analysis, since we follow the same selection.~\cite{1407.0558}
+The uncertainties from the measurement of photon energy scale (PES) and resolution (PER) are transferred into $\Delta m_{\gamma\gamma} / m_{\gamma\gamma}$ and $\Delta \sigma m_{\gamma\gamma} / \sigma m_{\gamma\gamma}$, and are estimated about 0.5 \% and 5 \% respectively.
+
+In the case of jets, the similar uncertainties as photons from jet energy scale (JES) and resolution (JER) are taken into account.~\cite{1107.4277}
+They impacts on JER about 5\% and on JES about 1\%.
+Their impacts on our selection procedure are about 0.5\%.
+
+Additionally, the uncertainty related to b-tag is considered due to the categorization MVA.
+The scale factors are applied to the simulated training samples to match the shape of data in the b-tag score distribution.
+The uncertainty of the classification MVA is estimated by varying the scale factor within one standard deviation of its uncertainty.
+The impacts from the other source of uncertainties are found to be negligible in the classification procedure.
+
+The theoretical uncertainties of the single-Higgs production and double-Higgs production are considered according to Ref.~\cite{1610.07922}. The uncertainties from BSM are take into account in the procedure of signal extraction.
+%% ** why bbH should be calculated finnaly ??
+
+All of the systematic uncertainties are summarized in Tab.~\ref{tab:systematic}.
+
+\begin{table}[h] \small
+\centering
+\caption{Summary of systematic uncertainties.}
+\label{tab:systematic}
+\begin{tabular}{lrr}
+\hline
+\multicolumn{1}{l|}{Source of systematic uncertainties}                                   & \multicolumn{1}{l|}{Type}          & \multicolumn{1}{l}{Value} \\ \hline
+\multicolumn{3}{c}{General uncertainties}                                                                                                                  \\ \hline
+\multicolumn{1}{l|}{Integrated luminosity}                                                & \multicolumn{1}{r|}{Normalization} & 2.5\%                     \\ \hline
+\multicolumn{3}{c}{Photon related uncertainties}                                                                                                           \\ \hline
+\multicolumn{1}{l|}{PES $\frac{\Delta m_{\gamma\gamma}}{m_{\gamma\gamma}}$}               & \multicolumn{1}{r|}{Shape}         & 2.0\%                     \\ \cline{2-2}
+\multicolumn{1}{l|}{PER $\frac{\Delta \sigma m_{\gamma\gamma}}{\sigma m_{\gamma\gamma}}$} & \multicolumn{1}{r|}{Shape}         & 1.0\%                     \\ \cline{2-2}
+\multicolumn{1}{l|}{Di-photon selection (with trigger uncertainties and PES)}              & \multicolumn{1}{r|}{Normalization} & 0.5\%                     \\ \cline{2-2}
+\multicolumn{1}{l|}{Photon identification}                                                 & \multicolumn{1}{r|}{Normalization} & 5.0\%                     \\ \hline
+\multicolumn{3}{c}{Jet related uncertainties}                                                                                                              \\ \hline
+\multicolumn{1}{l|}{JES $\frac{\Delta m_{jj}}{m_{jj}}$}                                   & \multicolumn{1}{r|}{Shape}         & 0.5\%                     \\ \cline{2-2}
+\multicolumn{1}{l|}{JER $\frac{\Delta \sigma m_{jj}}{\sigma m_{jj}}$}                     & \multicolumn{1}{r|}{Shape}         & 1.0\%                     \\ \cline{2-2}
+\multicolumn{1}{l|}{Di-jet selection (JES+JER)}                                            & \multicolumn{1}{r|}{Normalization} & 5.0\%                     \\ \hline
+\multicolumn{3}{c}{Resonant analysis specific uncertainties}                                                                                               \\ \hline
+\multicolumn{1}{l|}{Mass window selection (JES+JER)}                                      & \multicolumn{1}{r|}{Normalization} & 3.0\%                     \\ \cline{2-2}
+\multicolumn{1}{l|}{Classification MVA (HPC)}                                              & \multicolumn{1}{r|}{Normalization} & 11-19\%                   \\ \cline{2-2}
+\multicolumn{1}{l|}{Classification MVA (MPC)}                                              & \multicolumn{1}{r|}{Normalization} & 3-9\%                     \\ \hline
+\multicolumn{3}{c}{Non-resonant analysis specific uncertainties}                                                                                           \\ \hline
+\multicolumn{1}{l|}{$M_{x}$ Classification}                                                & \multicolumn{1}{r|}{Normalization} & 0.5\%                     \\ \cline{2-2}
+\multicolumn{1}{l|}{Classification MVA (HPC)}                                              & \multicolumn{1}{r|}{Normalization} & 11-19\%                   \\ \cline{2-2}
+\multicolumn{1}{l|}{Classification MVA (MPC)}                                              & \multicolumn{1}{r|}{Normalization} & 3-9\%                     \\ \hline
+\multicolumn{3}{c}{Theoretical uncertainties of SM single-Higgs boson production}                                                                          \\ \hline
+\multicolumn{1}{l|}{QCD missing orders (ggH, VBF H, VH, ttH)}                             & \multicolumn{1}{r|}{Normalization} & 0.4-5.8\%                 \\ \cline{2-2}
+\multicolumn{1}{l|}{PDF and  uncertainties (ggH, VBF H, VH, ttH)}                         & \multicolumn{1}{r|}{Normalization} & 1.6-3.6\%                 \\ \cline{2-2}
+\multicolumn{1}{l|}{Theory uncertainty bbH}                                               & \multicolumn{1}{r|}{Normalization} & 20\%                      \\ \hline
+\multicolumn{3}{c}{Theoretical uncertainties of SM di-Higgs boson production}                                                                              \\ \hline
+\multicolumn{1}{l|}{QCD missing orders}                                                   & \multicolumn{1}{r|}{Normalization} & 4.3-6\%                   \\ \cline{2-2}
+\multicolumn{1}{l|}{PDF and $\alpha_{s}$ uncertainties}                                   & \multicolumn{1}{r|}{Normalization} & 3.1\%                     \\ \cline{2-2}
+\multicolumn{1}{l|}{$m_{T}$ effects}                                                      & \multicolumn{1}{r|}{Normalization} & 5\%                       \\ \hline
+\end{tabular}
+\end{table}
+
+% ** mt effects ???
